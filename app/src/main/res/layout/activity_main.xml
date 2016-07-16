@@ -17,288 +17,384 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="
-
-基本信息"/>
-
-            <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Fstation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="发站"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Tstation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="到站"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="
-
-发货人信息"/>
+                android:text="基本信息" />
 
             <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Fname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="发货人"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Ftel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="发货人电话"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="
+                android:orientation="horizontal">
 
-收货人信息"/>
-
-            <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Tname"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="收货人"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="基本信息"/>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/Ttel"
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="发站"/>
+                    <Spinner
+                        android:id="@+id/Fstation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="到站"/>
+                    <Spinner
+                        android:id="@+id/Tstation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="收货人电话"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="发货人信息"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/Fname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="发货人"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-货物信息"/>
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/Ftel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="发货人电话"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/payWay"
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="付款方式"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="收货人信息"/>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/category1"
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/Tname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="收货人"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/Ttel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="收货人电话"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="品类"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="货物信息"/>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/category2"
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="付款方式"/>
+                    <Spinner
+                        android:id="@+id/payWay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="品类"/>
+                    <Spinner
+                        android:id="@+id/category1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="小类"/>
+                    <Spinner
+                        android:id="@+id/category2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="件数"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/uniprice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="单价"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/HavePay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="已付"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/ToPay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="提付"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/MonthPay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="月结"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="小类"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="价格信息"/>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/number"
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="件数"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:orientation="horizontal">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/uniprice"
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/daishou"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="代收款"/>
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/fankuan"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="返款方"/>
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="单价"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:orientation="horizontal">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/HavePay"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="从"/>
+                        <Spinner
+                            android:id="@+id/Fbaojia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                        </Spinner>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="到"/>
+                        <Spinner
+                            android:id="@+id/Tbaojia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
+
+                        </Spinner>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="已付"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:orientation="horizontal">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/ToPay"
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/baojia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="保价费"/>
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/jiehuo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="接货费"/>
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="提付"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:orientation="horizontal">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/MonthPay"
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                        <EditText
+                            android:id="@+id/songyun"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="送运费"/>
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                </LinearLayout>
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="月结"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="合计信息"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="
-
-价格信息"/>
-
-            <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/daishou"
+                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="代收款"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/totnumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="总件数"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/fankuan"
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="返款放"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/baojia"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="保价费"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/jiehuo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="接货费"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/songyun"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="送运费"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="
-
-合计信息"/>
-
-            <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/totnumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="总件数"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/totpay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="总运费"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/totpay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="总运费"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
 
-
-
-        </LinearLayout>
+            </LinearLayout>
     </ScrollView>
 </LinearLayout>
