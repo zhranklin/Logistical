@@ -10,8 +10,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
-
-
 public class MainActivity extends AppCompatActivity{
     /*
     TODO: 当时有讨论过, 就是说每件商品里面不需要付款方式, 付款方式放在整个订单里面, 而且没有已付提付月结这三个数额,
@@ -29,7 +27,7 @@ public class MainActivity extends AppCompatActivity{
              "number", "uniprice", "HavePay", "ToPay", "MonthPay" ,
             "daishou", "fankuan", "baojia", "jiehuo", "songyun" ,  "totnumber", "totpay"  };
     public static final String list[] ={
-        "payWay", "category1", "category2","Fstation", "Tstation","Fbaojia", "Tbaojia",
+        "payWay", "category1", "category2","Fstation", "Tstation","Ffankuan", "Tfankuan",
     };
     HashMap<String,EditText> mse = new HashMap<String, EditText>();
     HashMap<String,Spinner> mss = new HashMap<String, Spinner>();
@@ -47,7 +45,6 @@ public class MainActivity extends AppCompatActivity{
                 Field r = R.id.class.getField(list[i]);
                 mss.put(list[i],(Spinner) findViewById((Integer) r.getInt(null)));
             }
-            //xx.setText("aaa");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -55,7 +52,5 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
-    public static int getId(Context paramContext, String paramString) {
-        return paramContext.getResources().getIdentifier(paramString,"id", paramContext.getPackageName());
-    }
+
 }
