@@ -1,12 +1,12 @@
-package com.logistical.logistical;
+package com.logistical.tools;
 public class GetXml {
-    public static final String ATTRIBUTE_NAMES[][] = { { "发站","具体发站", "到站","具体到站" }, { "发货人", "发货人电话" }, { "收货人", "收货人电话" },
-            { "付款方式", "品类", "小类", "件数", "单价", "已付", "提付", "月结" }, { "代收款", "返款方", "返款从", "到", "保价费", "接货费", "送运费" },
-            { "总件数", "总运费" } };
+    public static final String ATTRIBUTE_NAMES[][] = { { "发站","具体发站" ,"到站","具体到站" }, { "发货人", "发货人电话" }, { "收货人", "收货人电话" },
+            {"品类", "小类", "件数", "单价"}, { "付款方式", "代收款", "返款方", "从", "到", "保价费", "接货费", "送货费" },
+            {"总件数", "总运费", "总价"}};
     public static final String ATTRIBUTE_VALUES[][] = { { "Fstation","Fstation2", "Tstation","Tstation2" }, { "Fname", "Ftel" },
             { "Tname", "Ttel" },
-            { "payWay", "category1", "category2", "number", "uniprice", "HavePay", "ToPay", "MonthPay" },
-            { "daishou", "fankuan", "Ffankuan", "Tfankuan", "baojia", "jiehuo", "songyun" }, { "totnumber", "totpay" } };
+            {  "category1", "category2", "number", "uniprice"}, {"payway","HavePay", "ToPay", "MonthPay"
+            { "daishou", "fankuan", "Ffankuan", "Tfankuan", "baojia", "jiehuo", "songyun" }, { "totnumber", "tottranpay","totpay" } };
     public static final String INFO[] = { "基本信息", "发货人信息", "收货人信息", "货物信息", "价格信息", "合计信息" };
     public static final int list[][] = { { 0, 1 }, null, null, { 0, 1, 2, }, { 2, 3 }, null };
 
