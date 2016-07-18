@@ -1,6 +1,7 @@
 package com.logistical.logistical;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,10 +25,10 @@ public class LoginActivity extends AppCompatActivity {
                 if (login.getProgress() == 0) {
                     for(int times = 0;times<3;times++)
                         for(int i=0;i<=100;i++) login.setProgress(i);
-                    Intent intent  = new Intent(LoginActivity.this,MainActivity.class);
+                    Intent intent  = new Intent(LoginActivity.this,InsertActivity.class);
                     try {
                         int id = Integer.parseInt(ID.getText().toString());
-                        intent.putExtra("ID", id);
+                        intent.putExtra("ID",id);
                         startActivity(intent);
                     }
                     catch (Exception e){

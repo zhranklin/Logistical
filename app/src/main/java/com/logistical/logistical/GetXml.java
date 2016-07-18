@@ -1,4 +1,4 @@
-package com.logistical.tools;
+package com.logistical.logistical;
 public class GetXml {
     public static final String ATTRIBUTE_NAMES[][] = { { "发站","具体发站" ,"到站","具体到站" }, { "发货人", "发货人电话" }, { "收货人", "收货人电话" },
             {"品类", "小类", "件数", "单价"}, { "付款方式", "代收款",  "返款从", "到", "返款费","保价费", "接货费", "送货费" },
