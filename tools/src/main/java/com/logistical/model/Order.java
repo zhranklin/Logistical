@@ -8,6 +8,11 @@ import java.util.Objects;
 
 /**
  * Order为订单的模型类, 用来表示一个订单的各项信息, 包括各种属性(字符串)以及各种费用(int), 还有所包含的商品用Staff List表示
+ * 在scala中(同一个包)写了一个Staff类, 在这里一并说明, Staff类表示商品, 包含四个属性:
+ * type 大类, subType 小类, number 数量, price 单价
+ * 在构造器中需要直接提供这四个属性(String String int int)
+ * 获取这四个属性调用type()等方法即可
+ * 注: Order和Staff均实现了自己的equals方法(内容相同则值相等), 且Order没实现hashCode(), 如果要作为map的键, 请考虑IdentityHashMap
  */
 public class Order {
   /**
@@ -74,7 +79,7 @@ public class Order {
     if (name.equals("总运费")) {
       int tot = 0;
       for (Staff s: staff) {
-        tot += s.getNumber() * s.getPrice();
+        tot += s.number() * s.price();
       }
       return tot;
     }
@@ -103,14 +108,14 @@ public class Order {
   public int getTotalNumber() {
     int tot = 0;
     for (Staff s : staff) {
-      tot += s.getNumber();
+      tot += s.number();
     }
     return tot;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof Order))
+    if (obj == null || !(obj instanceof Order))
       return false;
     Order o = (Order) obj;
     for (String attrName: ATTRIBUTE_NAMES)
