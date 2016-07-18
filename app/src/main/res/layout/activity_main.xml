@@ -150,23 +150,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="付款方式"/>
-                <Spinner
-                    android:id="@+id/payWay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/payWay"                android:layout_weight="1">
-
-                </Spinner>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="品类"/>
                 <Spinner
                     android:id="@+id/category1"
@@ -215,39 +198,6 @@
                     android:hint="单价"/>
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/HavePay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="已付"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/ToPay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="提付"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/MonthPay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:hint="月结"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -255,36 +205,22 @@
 
             <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                <TextView
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/daishou"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="代收款"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                    android:text="付款方式"/>
+                <Spinner
+                    android:id="@+id/payway"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/payway"                android:layout_weight="1">
 
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/fankuan"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="返款方"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
+                </Spinner>
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -336,11 +272,11 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
                     <EditText
-                        android:id="@+id/baojia"
+                        android:id="@+id/fankuan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:hint="保价费"/>
+                        android:hint="返款费"/>
                 </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                 <com.wrapp.floatlabelededittext.FloatLabeledEditText
@@ -348,11 +284,11 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
                     <EditText
-                        android:id="@+id/jiehuo"
+                        android:id="@+id/baojia"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:hint="接货费"/>
+                        android:hint="保价费"/>
                 </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
             </LinearLayout>
@@ -367,11 +303,23 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content">
                     <EditText
+                        android:id="@+id/jiehuo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:hint="接货费"/>
+                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+                    <EditText
                         android:id="@+id/songyun"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:hint="送运费"/>
+                        android:hint="送货费"/>
                 </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
             </LinearLayout>
@@ -397,12 +345,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <EditText
-                    android:id="@+id/totpay"
+                    android:id="@+id/tottranpay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:singleLine="true"
                     android:hint="总运费"/>
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/totpay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:hint="总价"/>
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
 
 
 

@@ -19,7 +19,7 @@
         <item>提付</item>
         <item>返付</item>
     </string-array>
-    <string-array name="payWay">
+    <string-array name="payway">
         <item>提付</item>
         <item>返付</item>
         <item>月结</item>
