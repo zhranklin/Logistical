@@ -13,25 +13,6 @@ apply plugin: 'java'
 apply plugin: 'scala'
 apply plugin: "com.github.maiflai.scalatest"
 
-sourceSets {
-  main {
-    java {
-      srcDirs = []
-    }
-    scala {
-      srcDirs = ['src/main/java', 'src/main/scala']
-    }
-  }
-  test {
-    java {
-      srcDirs = []
-    }
-    scala {
-      srcDirs = ['src/test/java', 'src/test/scala']
-    }
-  }
-}
-
 compileScala {
   scalaCompileOptions.additionalParameters = ["-Xexperimental"]
 }

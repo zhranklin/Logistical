@@ -25,3 +25,4 @@ captures/
 *.jks
 gradle-app.setting
 .gradletasknamecache
+.DS_Store/
