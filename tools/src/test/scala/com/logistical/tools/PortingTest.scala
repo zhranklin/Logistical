@@ -33,7 +33,6 @@ class PortingTest extends FlatSpec {
 
     val sr = new BufferedReader(new StringReader(expString))
     val impOrders = porting.imp(sr).asScala
-
     assert(orders == impOrders)
   }
 
