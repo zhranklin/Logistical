@@ -19,6 +19,7 @@
             android:id="@+id/ID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:hint="工号(ID)" />
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -33,6 +34,5 @@
         app:cpb_textIdle="Login"
         android:layout_below="@+id/view"
         android:layout_alignEnd="@+id/view" />
-
 
 </RelativeLayout>
