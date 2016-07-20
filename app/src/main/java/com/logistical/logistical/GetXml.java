@@ -1,15 +1,15 @@
 package com.logistical.logistical;
 
 public class GetXml {
-    public static final String ATTRIBUTE_NAMES[][] = {{"发站", "具体发站", "到站", "具体到站"}, {"发货人", "发货人电话"},
-            {"收货人", "收货人电话"}, {"品类", "小类", "件数", "单价"}, {"付款方式", "代收款", "返款从", "到", "返款费", "保价费", "接货费", "送货费"},
+    public static final String ATTRIBUTE_NAMES[][] = {{"发站", "具体发站", "到站", "具体到站","客户单号"}, {"发货人", "发货人电话"},
+            {"收货人", "收货人电话"}, {"当前件数","品类", "小类", "件数", "单价"}, {"付款方式", "代收款","返款费", "返款从", "到",  "保价费", "接货费", "送货费"},
             {"总件数", "总运费", "总价"}};
-    public static final String ATTRIBUTE_VALUES[][] = {{"Fstation", "Fstation2", "Tstation", "Tstation2"},
-            {"Fname", "Ftel"}, {"Tname", "Ttel"}, {"category1", "category2", "number", "uniprice"},
-            {"payway", "daishou", "Ffankuan", "Tfankuan", "fankuan", "baojia", "jiehuo", "songyun"},
+    public static final String ATTRIBUTE_VALUES[][] = {{"Fstation", "Fstation2", "Tstation", "Tstation2","danhao"},
+            {"Fname", "Ftel"}, {"Tname", "Ttel"}, {"staffnum","category1", "category2", "number", "uniprice"},
+            {"payway", "daishou","fankuan", "Ffankuan", "Tfankuan",  "baojia", "jiehuo", "songyun"},
             {"totnumber", "tottranpay", "totpay"}};
     public static final String INFO[] = {"基本信息", "发货人信息", "收货人信息", "货物信息", "价格信息", "合计信息"};
-    public static final int list[][] = {{0, 2}, null, null, {0, 1,}, {0, 2, 3}, null};
+    public static final int list[][] = {{0, 2}, null, null, {0, 1,2}, {0, 3, 4}, null};
 
     public static void main(String args[]) {
         System.out.print(" <ScrollView\n" + "        android:layout_width=\"match_parent\"\n"
@@ -86,6 +86,7 @@ public class GetXml {
                     printList(i, j * 2);
                     printEdit(i, j * 2 + 1);
                 }
+                printEdit(i,4);
                 continue;
             }
             for (int j = 0; j < ATTRIBUTE_NAMES[i].length; j++) {
@@ -100,7 +101,7 @@ public class GetXml {
                     printList(i, j);
                 else
                     printEdit(i, j);
-                if ((i == 4 && j != 0 && j != 1 )|| (i == 3 && j%2==0))
+                if ((i == 4 && j%2==1 )|| (i == 3 && j%2==1))
                     j++;
 
             }
@@ -110,7 +111,7 @@ public class GetXml {
     }
 
     public static void printList(int i, int j) {
-        if (i == 4 && j != 0 || (i == 3 && j == 0)) {
+        if (i == 4 && j%2==1 || (i == 3 && j%2==1)) {
             System.out.println("<LinearLayout\r\n" + "android:layout_width=\"match_parent\"\n"
                     + "android:layout_height=\"wrap_content\"\n" + "android:orientation=\"horizontal\">\n");
             printSpinner(i, j);
@@ -144,7 +145,7 @@ public class GetXml {
     }
 
     public static void printEdit(int i, int j) {
-        if ((i == 3 || i == 4) && j % 2 == 0) {
+        if ((i == 3&&j%2==1) ||( i == 4 && j % 2 == 1)) {
             System.out.println("<LinearLayout\r\n" + "android:layout_width=\"match_parent\"\n"
                     + "android:layout_height=\"wrap_content\"\n" + "android:orientation=\"horizontal\">\n");
             System.out.println(" <com.wrapp.floatlabelededittext.FloatLabeledEditText\n"

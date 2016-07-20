@@ -35,5 +35,4 @@
         android:layout_below="@+id/view"
         android:layout_alignEnd="@+id/view" />
 
-
 </RelativeLayout>

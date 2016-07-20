@@ -17,14 +17,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:label="填写信息">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".InsertActivity"
             android:label="@string/title_activity_insert"
             android:theme="@style/AppTheme.NoActionBar">
