@@ -18,13 +18,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-<<<<<<< HEAD
 
-=======
     lintOptions {
         disable 'InvalidPackage'
     }
->>>>>>> b1f77d968699b76622bb5512b6bca8997bfbb259
 }
 
 dependencies {
