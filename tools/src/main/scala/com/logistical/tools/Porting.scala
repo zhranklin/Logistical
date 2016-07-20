@@ -2,13 +2,10 @@ package com.logistical.tools
 
 import java.io.{BufferedReader, Writer}
 import java.util
-import java.util.stream.Collectors
 
 import com.google.gson.Gson
 import com.logistical.model._
-import com.sun.crypto.provider.AESCipher.AES128_CBC_NoPadding
 
-import scala.beans.BeanProperty
 import scala.collection.JavaConverters._
 import scala.util.Try
 

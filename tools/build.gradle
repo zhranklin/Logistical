@@ -14,7 +14,7 @@ apply plugin: 'scala'
 apply plugin: "com.github.maiflai.scalatest"
 
 compileScala {
-  scalaCompileOptions.additionalParameters = ["-Xexperimental"]
+  scalaCompileOptions.additionalParameters = ["-Xexperimental", "-target:jvm-1.7"]
 }
 
 compileTestScala {
@@ -33,6 +33,8 @@ dependencies {
   testCompile 'org.scalatest:scalatest_2.11:3.0.0-RC4'
   testRuntime 'org.pegdown:pegdown:1.1.0'
 }
+targetCompatibility = '1.7'
+sourceCompatibility = '1.7'
 
 javadoc {
   options {
