@@ -38,10 +38,12 @@ public class MainActivity extends AppCompatActivity{
             for(int i=0;i<edit.length;i++) {
                 Field r = R.id.class.getField(edit[i]);
                 mse.put(edit[i],(EditText) findViewById((Integer) r.getInt(null)));
+                if(mse.get(edit[i])==null) Toast.makeText(this,"hello ",Toast.LENGTH_LONG).show();
             }
             for(int i=0;i<list.length;i++) {
                 Field r = R.id.class.getField(list[i]);
                 mss.put(list[i],(Spinner) findViewById((Integer) r.getInt(null)));
+                if(mse.get(edit[i])==null) Toast.makeText(this,"hello ",Toast.LENGTH_LONG).show();
             }
         }
         catch (Exception e){
