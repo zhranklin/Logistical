@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-//import com.logistical.model.*;
+import com.logistical.model.*;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 
