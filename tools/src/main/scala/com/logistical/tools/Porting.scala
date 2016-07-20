@@ -45,8 +45,16 @@ class Porting(errorHandler: ErrorHandler) {
     * @param from 包含json的BufferedReader
     * @return 一个Order的List
     */
-  def imp(from: BufferedReader): util.List[String] = {
+  def imp(from: BufferedReader): util.List[Order] = {
     def stream: Stream[String] = from.readLine #:: stream
-    stream.takeWhile(_ != null).asJava
+    stream.takeWhile(_ != null).flatMap{
+      JsonToOrder(_) match {
+        case Right(order) ⇒
+          Some(order)
+        case Left(err) ⇒
+          errorHandler.onError(err)
+          None
+      }
+    }.asJava
   }
 }
