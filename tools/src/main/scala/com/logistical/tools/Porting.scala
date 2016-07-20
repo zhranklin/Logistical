@@ -1,12 +1,11 @@
 package com.logistical.tools
 
 import java.io.{BufferedReader, Writer}
-import java.util.stream.Collectors
+import java.util
 
 import com.google.gson.Gson
 import com.logistical.model._
 
-import scala.beans.BeanProperty
 import scala.collection.JavaConverters._
 import scala.util.Try
 
@@ -46,14 +45,8 @@ class Porting(errorHandler: ErrorHandler) {
     * @param from 包含json的BufferedReader
     * @return 一个Order的List
     */
-  def imp(from: BufferedReader) =
-    from.lines.collect(Collectors.toList()).asScala.flatMap{
-      JsonToOrder(_) match {
-        case Right(order) =>
-          Some(order)
-        case Left(err) =>
-          errorHandler.onError(err)
-          None
-      }
-    }.asJava
+  def imp(from: BufferedReader): util.List[String] = {
+    def stream: Stream[String] = from.readLine #:: stream
+    stream.takeWhile(_ != null).asJava
+  }
 }
