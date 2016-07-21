@@ -12,7 +12,7 @@ import scala.util.Try
 /**
   * Created by Zhranklin on 16/7/18.
   * 用于导入导出订单的类
-  * 构造器接受一个Tools.ErrorHandler作为参数, 所有的出错信息有这个errorHandler处理
+  * 构造器接受一个[[ErrorHandler]]作为参数, 所有的出错信息由它处理
   */
 class Porting(errorHandler: ErrorHandler) {
   private val gson = new Gson
