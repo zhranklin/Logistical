@@ -26,24 +26,27 @@ import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.Inflater;
+
+import scala.Array;
 
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String,EditText> mse = new HashMap<String, EditText>();
     HashMap<String,Spinner> mss = new HashMap<String, Spinner>();
-    private List<String> StaffString;
+    private ArrayList<String> StaffString = new ArrayList<String>();
     private ArrayAdapter<String> StaffAdapter;
     public static final String edit[] = {"Fstation2",  "Tstation2","danhao",
             "Fname", "Ftel", "Tname", "Ttel", "number", "uniprice", "daishou", "fankuan", "baojia", "jiehuo", "songyun",
             "totnumber", "tottranpay", "totpay"};
     public static final String list[] ={
-           "staffnum", "payWay", "category1", "category2","Fstation", "Tstation","Ffankuan", "Tfankuan",
+           "staffnum", "payway", "category1", "category2","Fstation", "Tstation","Ffankuan", "Tfankuan",
     };
     public int ID;
     int index=1;
-    private LayoutInflater inflater;
     AddFloatingActionButton addStaff;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,18 +71,16 @@ public class InsertActivity extends AppCompatActivity
         } catch (NoSuchFieldException e1) {
             e1.printStackTrace();
         }
-        inflater=LayoutInflater.from(this);
-//        mss.get("Fstation").setSelection(1);
-
-        /*addStaff.setOnClickListener(new View.OnClickListener() {
+  
+        addStaff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StaffAdapter.add(""+(++index));
-                int now = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
-
+                //StaffAdapter.add(""+(++index));
+                //int now = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
+                mse.get(edit[0]).setText("aaaaaaaa");
             }
-        });
-        mss.get("staffnum").setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        });/*
+        mss.get(list[0]).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mse.get("number").setText("");
@@ -87,7 +88,7 @@ public class InsertActivity extends AppCompatActivity
                 mss.get("category1").setSelection(0);
                 mss.get("category2").setSelection(0);
             }
-        });
+        });*/
         mse.get("number").addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,7 +121,7 @@ public class InsertActivity extends AppCompatActivity
                 //TODO
             }
         });
-        mss.get("category1").setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       /* mss.get("category1").setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
@@ -133,27 +134,23 @@ public class InsertActivity extends AppCompatActivity
             }
         });*/
     }
-    private void save(int x){
 
-    }
     private void init() throws NoSuchFieldException, IllegalAccessException {
+        addStaff = (AddFloatingActionButton) findViewById(R.id.main_content).findViewById(R.id.addStaff);
         for(int i=0;i<edit.length;i++) {
-            Log.e("Insert",""+i);
             Field r = R.id.class.getField(edit[i]);
-            mse.put(edit[i],(EditText) findViewById((Integer) r.getInt(null)));
-            mse.get(edit[i]).setText("aaaa");
+            mse.put(edit[i],(EditText) findViewById(R.id.main_content).findViewById((Integer) r.getInt(null)));
         }
         for(int i=0;i<list.length;i++) {
             Field r = R.id.class.getField(list[i]);
-            mss.put(list[i],(Spinner) findViewById((Integer) r.getInt(null)));
-            if(mss.get(edit[i])==null) Toast.makeText(this,"hello ",Toast.LENGTH_LONG).show();
+            mss.put(list[i],(Spinner) findViewById(R.id.main_content).findViewById((Integer) r.getInt(null)));
 
         }
-        addStaff = (AddFloatingActionButton) findViewById(R.id.content_frame).findViewById(R.id.addStaff);
         StaffString.add("1");
         StaffAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,StaffString);
         StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         mss.get("staffnum").setAdapter(StaffAdapter);
+
     }
 
     @Override
@@ -192,6 +189,7 @@ public class InsertActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
 
         if (id == R.id.query) {
 

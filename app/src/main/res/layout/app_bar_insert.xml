@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.logistical.logistical.InsertActivity">
+    tools:context="com.logistical.logistical.InsertActivity"
+    android:id="@+id/app_bar_insert">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,7 +23,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/content_frame"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -43,168 +43,189 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/father"> <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/upper"><TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="基本信息"/>
-
-                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="发站"/>
-                    <Spinner
-                        android:id="@+id/Fstation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/Fstation"                android:layout_weight="1">
-
-                    </Spinner>
-                </LinearLayout>
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Fstation2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="具体发站"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                android:id="@+id/father">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:id="@+id/upper">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="到站"/>
-                    <Spinner
-                        android:id="@+id/Tstation"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:entries="@array/Tstation"                android:layout_weight="1">
+                        android:text="基本信息" />
 
-                    </Spinner>
+                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="发站" />
+
+                        <Spinner
+                            android:id="@+id/Fstation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/Fstation"
+                            android:layout_weight="1">
+
+                        </Spinner>
+                    </LinearLayout>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Fstation2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="具体发站" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="到站" />
+
+                        <Spinner
+                            android:id="@+id/Tstation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/Tstation"
+                            android:layout_weight="1">
+
+                        </Spinner>
+                    </LinearLayout>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Tstation2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="具体到站" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/danhao"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="客户单号" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="发货人信息" />
+
+                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Fname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="发货人" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Ftel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="发货人电话" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="收货人信息" />
+
+                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Tname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="收货人" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+                    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/Ttel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:hint="收货人电话" />
+                    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="货物信息"
+                            android:id="@+id/staffinfo" />
+
+                        <com.getbase.floatingactionbutton.AddFloatingActionButton
+                            android:id="@+id/addStaff"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            fab:fab_plusIconColor="@color/half_black"
+                            fab:fab_colorNormal="@color/white"
+                            fab:fab_colorPressed="@color/white_pressed"
+                            android:layout_marginBottom="16dp"
+                            android:maxWidth="16dp"
+                            android:maxHeight="16dp"
+                            android:layout_marginStart="16dp" />
+                    </RelativeLayout>
+
+                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
                 </LinearLayout>
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Tstation2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="具体到站"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/danhao"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="客户单号"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="发货人信息"/>
-
-                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Fname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="发货人"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Ftel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="发货人电话"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="收货人信息"/>
-
-                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Tname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="收货人"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <EditText
-                        android:id="@+id/Ttel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:singleLine="true"
-                        android:hint="收货人电话"/>
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="货物信息"
-                        android:id="@+id/staffinfo"
-                        />
-                    <com.getbase.floatingactionbutton.AddFloatingActionButton
-                        android:id="@+id/addStaff"
-                        android:layout_alignParentRight="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        fab:fab_plusIconColor="@color/half_black"
-                        fab:fab_colorNormal="@color/white"
-                        fab:fab_colorPressed="@color/white_pressed"
-                        android:layout_marginBottom="16dp"
-                        android:maxWidth="16dp"
-                        android:maxHeight="16dp"
-                        android:layout_marginStart="16dp"/>
-                </RelativeLayout>
-
-                <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
-
-            </LinearLayout>
 
                 <LinearLayout
                     android:orientation="vertical"
@@ -217,23 +238,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="当前件数"/>
+                                android:text="当前件数" />
+
                             <Spinner
                                 android:id="@+id/staffnum"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/staffnum"                android:layout_weight="1">
+                                android:entries="@array/staffnum"
+                                android:layout_weight="1">
 
                             </Spinner>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -243,33 +269,40 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="品类"/>
+                                    android:text="品类" />
+
                                 <Spinner
                                     android:id="@+id/category1"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:entries="@array/category1"                android:layout_weight="1">
+                                    android:entries="@array/category1"
+                                    android:layout_weight="1">
 
                                 </Spinner>
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
+
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="小类"/>
+                                    android:text="小类" />
+
                                 <Spinner
                                     android:id="@+id/category2"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:entries="@array/category2"                android:layout_weight="1">
+                                    android:entries="@array/category2"
+                                    android:layout_weight="1">
 
                                 </Spinner>
                             </LinearLayout>
@@ -284,30 +317,33 @@
                                 android:layout_width="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content">
+
                                 <EditText
                                     android:id="@+id/number"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
-                                    android:hint="件数"/>
+                                    android:hint="件数" />
                             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                                 android:layout_width="wrap_content"
                                 android:layout_weight="1"
                                 android:layout_height="wrap_content">
+
                                 <EditText
                                     android:id="@+id/uniprice"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
-                                    android:hint="单价"/>
+                                    android:hint="单价" />
                             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                         </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
@@ -319,23 +355,29 @@
                         android:layout_height="wrap_content"
                         android:text="价格信息" />
 
-                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout><LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
+                    <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="付款方式"/>
-                    <Spinner
-                        android:id="@+id/payway"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/payway"                android:layout_weight="1">
+                        android:orientation="horizontal">
 
-                    </Spinner>
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="付款方式" />
+
+                        <Spinner
+                            android:id="@+id/payway"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:entries="@array/payway"
+                            android:layout_weight="1">
+
+                        </Spinner>
+                    </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -345,24 +387,26 @@
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
+
                             <EditText
                                 android:id="@+id/daishou"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:hint="代收款"/>
+                                android:hint="代收款" />
                         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                         <com.wrapp.floatlabelededittext.FloatLabeledEditText
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
+
                             <EditText
                                 android:id="@+id/fankuan"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:hint="返款费"/>
+                                android:hint="返款费" />
                         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     </LinearLayout>
@@ -376,33 +420,40 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="返款从"/>
+                                android:text="返款从" />
+
                             <Spinner
                                 android:id="@+id/Ffankuan"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/Ffankuan"                android:layout_weight="1">
+                                android:entries="@array/Ffankuan"
+                                android:layout_weight="1">
 
                             </Spinner>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="到"/>
+                                android:text="到" />
+
                             <Spinner
                                 android:id="@+id/Tfankuan"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:entries="@array/Tfankuan"                android:layout_weight="1">
+                                android:entries="@array/Tfankuan"
+                                android:layout_weight="1">
 
                             </Spinner>
                         </LinearLayout>
@@ -417,24 +468,26 @@
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
+
                             <EditText
                                 android:id="@+id/baojia"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:hint="保价费"/>
+                                android:hint="保价费" />
                         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                         <com.wrapp.floatlabelededittext.FloatLabeledEditText
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
+
                             <EditText
                                 android:id="@+id/jiehuo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:hint="接货费"/>
+                                android:hint="接货费" />
                         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     </LinearLayout>
@@ -448,12 +501,13 @@
                             android:layout_width="wrap_content"
                             android:layout_weight="1"
                             android:layout_height="wrap_content">
+
                             <EditText
                                 android:id="@+id/songyun"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:singleLine="true"
-                                android:hint="送货费"/>
+                                android:hint="送货费" />
                         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     </LinearLayout>
@@ -461,40 +515,44 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="合计信息"/>
+                        android:text="合计信息" />
 
                     <LinearLayout style="@style/common_horizontal_division_line_style"></LinearLayout>
+
                     <com.wrapp.floatlabelededittext.FloatLabeledEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <EditText
                             android:id="@+id/totnumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:hint="总件数"/>
+                            android:hint="总件数" />
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     <com.wrapp.floatlabelededittext.FloatLabeledEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <EditText
                             android:id="@+id/tottranpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:hint="总运费"/>
+                            android:hint="总运费" />
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     <com.wrapp.floatlabelededittext.FloatLabeledEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <EditText
                             android:id="@+id/totpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:singleLine="true"
-                            android:hint="总价"/>
+                            android:hint="总价" />
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                 </LinearLayout>
