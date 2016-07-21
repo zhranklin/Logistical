@@ -83,7 +83,7 @@ object PrintWork {
 
     /**
       * 设置字体样式
-      * @param fonts com.logistical.tools.print.Font中的字体, 可以添加多个参数组合使用
+      * @param fonts [[Font]] (ITALIC, FRAME, BOLD, DOUBLE_HEIGHT, DOUBLE_WIDTH, INVERSE, UNDERLINE)中的字体, 可以添加多个参数组合使用
       * @return this
       */
     @varargs def font(fonts: Font*): Builder = {
