@@ -24,13 +24,12 @@ import android.widget.Toast;
 import com.logistical.model.*;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import com.wrapp.floatlabelededittext.FloatLabeledEditText;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.Inflater;
-
 import scala.Array;
 
 public class InsertActivity extends AppCompatActivity
@@ -48,11 +47,13 @@ public class InsertActivity extends AppCompatActivity
     public int ID;
     int index=1;
     AddFloatingActionButton addStaff;
+    Staff staff[] = new Staff[100];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
         ID = getIntent().getIntExtra("ID",0);
+        staff[1] = new Staff();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,68 +72,67 @@ public class InsertActivity extends AppCompatActivity
         } catch (NoSuchFieldException e1) {
             e1.printStackTrace();
         }
-  
         addStaff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //StaffAdapter.add(""+(++index));
-                //int now = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
-                mse.get(edit[0]).setText("aaaaaaaa");
-            }
-        });/*
-        mss.get(list[0]).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mse.get("number").setText("");
-                mse.get("uniprice").setText("");
-                mss.get("category1").setSelection(0);
+                try {
+                    Staff temstaff = new Staff(mss.get("category1").getSelectedItem().toString(), mss.get("category2").getSelectedItem().toString(),
+                            Integer.parseInt(mse.get("number").getText().toString()), Integer.parseInt(mse.get("uniprice").getText().toString()));
+                    staff[index] = temstaff;
+                }catch (Exception e) {
+                 //   Toast.makeText(InsertActivity.this,"不能有空或者非数字",Toast.LENGTH_SHORT).show();
+                }
+                StaffString.add(""+(++index));
+                mss.get("staffnum").setSelection(index);
+                /*mss.get("category1").setSelection(0);
                 mss.get("category2").setSelection(0);
-            }
-        });*/
-        mse.get("number").addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //TODO
+                mse.get("uniprice").setText("");
+                mse.get("number").setText("");*/
             }
         });
-        mse.get("uniprice").addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        for(int i=2;i<=3;i++) {
+            final Spinner tmp = mss.get(list[i]);
+            tmp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
+                    if (staff[index] == null) {
+                        staff[index] = new Staff();
+                    }
+                    staff[index].setType(tmp.getSelectedItem().toString());
+                }
 
-            }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+            });
+        }
+        for(int i=7;i<=8;i++) {
+            final EditText tmp = mse.get(edit[i]);
+            tmp.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                //TODO
-            }
-        });
-       /* mss.get("category1").setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
-        });
-        mss.get("category2").setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                }
 
-            }
-        });*/
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
+                    if (staff[index] == null) {
+                        staff[index] = new Staff();
+                    }
+                    Toast.makeText(InsertActivity.this,""+index+(staff[index]==null),Toast.LENGTH_LONG).show();
+                    // staff[index].setNumber(Integer.parseInt(tmp.getText().toString()));
+                }
+            });
+        }
+
     }
 
     private void init() throws NoSuchFieldException, IllegalAccessException {

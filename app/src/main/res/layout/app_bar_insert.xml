@@ -524,6 +524,7 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+                            android:editable="false"
                             android:id="@+id/totnumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -536,6 +537,7 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+                            android:editable="false"
                             android:id="@+id/tottranpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -548,6 +550,7 @@
                         android:layout_height="wrap_content">
 
                         <EditText
+                            android:editable="false"
                             android:id="@+id/totpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
