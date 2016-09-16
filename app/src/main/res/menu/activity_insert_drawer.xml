@@ -3,6 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/bluetooth"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="连接蓝牙" />
+        /item>
+        <item
             android:id="@+id/insert"
             android:icon="@drawable/ic_menu_camera"
             android:title="新建订单" />
@@ -18,6 +23,7 @@
             android:id="@+id/export"
             android:icon="@drawable/ic_menu_send"
             android:title="生成文件" />
+
     </group>
 
 

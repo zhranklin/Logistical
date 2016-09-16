@@ -15,7 +15,7 @@ public class GetXml {
         System.out.print(" <ScrollView\n" + "        android:layout_width=\"match_parent\"\n"
                 + "        android:layout_height=\"wrap_content\">\n" + "\n" + "        <RelativeLayout\n"
                 + "            android:layout_width=\"match_parent\"\n"
-                + "            android:layout_height=\"wrap_content\"\n" + "            android:id=\"@+id/father\">");
+                + "            android:layout_height=\"wrap_content\"   \n" + "            android:id=\"@+id/father\">");
         System.out.print(" <LinearLayout\n" + "                android:orientation=\"vertical\"\n"
                 + "                android:layout_width=\"match_parent\"\n"
                 + "                android:layout_height=\"wrap_content\"\n"
