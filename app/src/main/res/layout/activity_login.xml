@@ -29,7 +29,7 @@
         android:layout_width="98dp"
         android:layout_height="32dp"
         android:textColor="@color/white"
-        android:textSize="14sp"
+        android:textSize="12sp"
         app:cpb_cornerRadius="24dp"
         app:cpb_textIdle="Login"
         android:layout_below="@+id/view"

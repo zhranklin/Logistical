@@ -6,7 +6,7 @@
             android:id="@+id/bluetooth"
             android:icon="@drawable/ic_menu_camera"
             android:title="连接蓝牙" />
-        /item>
+
         <item
             android:id="@+id/insert"
             android:icon="@drawable/ic_menu_camera"

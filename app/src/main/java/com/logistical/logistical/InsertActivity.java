@@ -1,5 +1,6 @@
 package com.logistical.logistical;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -8,9 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -21,27 +19,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.logistical.model.*;
-import com.getbase.floatingactionbutton.AddFloatingActionButton;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.support.v4.app.ActivityCompat.startActivityForResult;
 
 
 public class InsertActivity extends AppCompatActivity
@@ -54,25 +49,29 @@ public class InsertActivity extends AppCompatActivity
     public static final String edit[] = {"Fstation2", "Tstation2", "danhao",
             "Fname", "Ftel", "Tname", "Ttel", "number", "uniprice", "daishou", "fankuan", "baojia", "jiehuo", "songyun",
             "totnumber", "tottranpay", "totpay"};
+    private final String[] FEE = {"代收款", "返款费", "保价费", "接货费", "送货费", "总件数", "总运费", "总价"};
+    private final String[] ATTR = {"发站", "到站", "客户单号", "发货人", "发货人电话", "收货人", "收货人电话", "付款方式",
+            "返款方", "返款方式1", "返款方式2"};
     public static final String list[] = {
             "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "Ffankuan", "Tfankuan",
     };
-    public int ID;
-    int index = 1;
-    AddFloatingActionButton addStaff;
-    Staff staff[] = new Staff[100];
-    
+    private int ID, totindex = 1;
+    private Button addStaff, saveStaff, confirm;
+    private Staff staff[] = new Staff[100];
+    private View insert, query;
+
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
         ID = getIntent().getIntExtra("ID", 0);
-        staff[1] = new Staff();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        assert drawer != null;
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -81,71 +80,83 @@ public class InsertActivity extends AppCompatActivity
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
-
-
                 if (id == R.id.query) {
-
+                    insert.setVisibility(View.GONE);
+                    query.setVisibility(View.VISIBLE);
                 } else if (id == R.id.insert) {
-                    Toast.makeText(InsertActivity.this,"press",Toast.LENGTH_LONG).show();
+                    staff = new Staff[100];
+                    totindex = 1;
+                    for (String anEdit : edit) {
+                        mse.get(anEdit).setText("");
+                    }
+                    staff[1] = new Staff();
+                    StaffString = new ArrayList<String>();
+                    StaffString.add("1");
+                    StaffAdapter = new ArrayAdapter<String>(InsertActivity.this, android.R.layout.simple_spinner_item, StaffString);
+                    StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+                    mss.get("staffnum").setAdapter(StaffAdapter);
+                    for (String anList : list) {
+                        Log.e("anlist", anList);
+                        mss.get(anList).setSelection(0);
+                    }
+
                 } else if (id == R.id.export) {
 
                 } else if (id == R.id.print) {
 
-                }
-                else if (id == R.id.bluetooth){
-                    BluetoothAdapter mBluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
-                    if(mBluetoothAdapter == null) {
-                        Toast.makeText(InsertActivity.this,"Device not support Bluetooth",Toast.LENGTH_LONG).show();
+                } else if (id == R.id.bluetooth) {
+                    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                    if (mBluetoothAdapter == null) {
+                        Toast.makeText(InsertActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
 
                     }
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(InsertActivity.this,"未打开蓝牙",Toast.LENGTH_LONG).show();
+                    if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
+                        Toast.makeText(InsertActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(intent,REQUEST_ENABLE_BT);
+                        startActivityForResult(intent, REQUEST_ENABLE_BT);
                         mBluetoothAdapter.startDiscovery();
                         intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                         //设置可被发现的时间，300s
                         intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
                         startActivity(intent);
                     }
-                    mBluetoothAdapter.startDiscovery();
+                    if (mBluetoothAdapter != null) {
+                        mBluetoothAdapter.startDiscovery();
+                    }
                     BroadcastReceiver mReceiver = new BroadcastReceiver() {
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
-
-                            // 当有设备被发现的时候会收到 action == BluetoothDevice.ACTION_FOUND 的广播
                             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-
-                                //广播的 intent 里包含了一个 BluetoothDevice 对象
                                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-                                //假设我们用一个 ListView 展示发现的设备，那么每收到一个广播，就添加一个设备到 adapter 里
-                             //  Toast.makeText(InsertActivity.this,device.getName() + "\n" + device.getAddress(),Toast.LENGTH_SHORT).show();
                             }
                         }
                     };
                     IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                     registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
-                    Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+                    Set<BluetoothDevice> pairedDevices = null;
+                    if (mBluetoothAdapter != null) {
+                        pairedDevices = mBluetoothAdapter.getBondedDevices();
+                    }
                     BluetoothDevice useDevice = null;
-                    if (pairedDevices.size() > 0) {
+                    if ((pairedDevices != null ? pairedDevices.size() : 0) > 0) {
                         for (BluetoothDevice device : pairedDevices) {
-                     //       Toast.makeText(InsertActivity.this,device.getName() + "\n" + device.getAddress(),Toast.LENGTH_LONG).show();
-                           // Toast.makeText(InsertActivity.this,device.getAddress(),Toast.LENGTH_LONG).show();
-                            if(device.getAddress().equals("00:0C:B6:02:EB:CF")){
+                            if (device.getAddress().equals("00:0C:B6:02:EB:CF")) {
                                 useDevice = device;
                             }
                         }
                     }
-                    Toast.makeText(InsertActivity.this,useDevice.getAddress(),Toast.LENGTH_LONG).show();
-                    ConnectThread cnt = new ConnectThread(useDevice,new byte[]{1,0,0,1,1,0,1,1,1});
-                    Toast.makeText(InsertActivity.this,"cnt"+(cnt.mmSocket==null),Toast.LENGTH_LONG).show();
+                    if (useDevice != null) {
+                        Toast.makeText(InsertActivity.this, useDevice.getAddress(), Toast.LENGTH_LONG).show();
+                    }
+                    ConnectThread cnt = new ConnectThread(useDevice, null);
+                    Toast.makeText(InsertActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
                     cnt.start();
-                    //cnet.write(new byte[]{0,0,0,1,1,1,});
                 }
+
                 item.setCheckable(true);
                 drawer.closeDrawers();
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                assert drawer != null;
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -164,77 +175,56 @@ public class InsertActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 try {
-                    Staff temstaff = new Staff(mss.get("category1").getSelectedItem().toString(), mss.get("category2").getSelectedItem().toString(),
-                            Integer.parseInt(mse.get("number").getText().toString()), Integer.parseInt(mse.get("uniprice").getText().toString()));
-                    staff[index] = temstaff;
-                } catch (Exception e) {
-                    //   Toast.makeText(InsertActivity.this,"不能有空或者非数字",Toast.LENGTH_SHORT).show();
+                    save();
+                } catch (NullValueException e1) {
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    return;
                 }
-                StaffAdapter.add("" + (++index));
-                StaffString.add("" + index);
-                mss.get("staffnum").setSelection(index);
+                StaffString.add("" + (++totindex));
+                // StaffAdapter.add("" + (++totindex));
+                mss.get("staffnum").setSelection(totindex - 1);
                 mss.get("category1").setSelection(0);
                 mss.get("category2").setSelection(0);
                 mse.get("uniprice").setText("");
                 mse.get("number").setText("");
             }
         });
-        for (int i = 2; i <= 3; i++) {
-            final Spinner tmp = mss.get(list[i]);
-            tmp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
-                    if (staff[index] == null) {
-                        staff[index] = new Staff();
-                    }
-                    staff[index].setType(tmp.getSelectedItem().toString());
+        saveStaff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    save();
+                } catch (NullValueException e) {
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
+            }
+        });
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Order order = makeOrder();
+                } catch (NullValueException e1) {
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                } catch (NotNumberException e2) {
+                    Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_LONG).show();
                 }
-            });
-        }
-        for (int i = 7; i <= 8; i++) {
-            final EditText tmp = mse.get(edit[i]);
-            tmp.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
-                    if (staff[index] == null) {
-                        staff[index] = new Staff();
-                    }
-                    //Toast.makeText(InsertActivity.this, "" + index + (staff[index] == null), Toast.LENGTH_LONG).show();
-                    try {
-                        staff[index].setNumber(Integer.parseInt(tmp.getText().toString()));
-                    } catch (NumberFormatException e) {
-                        Toast.makeText(InsertActivity.this, "请输入数字", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-        }
+            }
+        });
     }
+
     private void init() throws NoSuchFieldException, IllegalAccessException {
-        addStaff = (AddFloatingActionButton) findViewById(R.id.main_content).findViewById(R.id.addStaff);
-        for (int i = 0; i < edit.length; i++) {
-            Field r = R.id.class.getField(edit[i]);
-            mse.put(edit[i], (EditText) findViewById(R.id.main_content).findViewById((Integer) r.getInt(null)));
+        addStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Addstaff);
+        saveStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Savestaff);
+        confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
+        staff[1] = new Staff();
+        for (String anEdit : edit) {
+            Field r = R.id.class.getField(anEdit);
+            mse.put(anEdit, (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
         }
-        for (int i = 0; i < list.length; i++) {
-            Field r = R.id.class.getField(list[i]);
-            mss.put(list[i], (Spinner) findViewById(R.id.main_content).findViewById((Integer) r.getInt(null)));
+        for (String aList : list) {
+            Field r = R.id.class.getField(aList);
+            mss.put(aList, (Spinner) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
 
         }
         StaffString.add("1");
@@ -244,13 +234,30 @@ public class InsertActivity extends AppCompatActivity
 
     }
 
+    private void save() throws NullValueException {
+        int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
+        try {
+            Staff temstaff = new Staff(mss.get("category1").getSelectedItem().toString(), mss.get("category2").getSelectedItem().toString(),
+                    Integer.parseInt(mse.get("number").getText().toString()), Integer.parseInt(mse.get("uniprice").getText().toString()));
+            staff[index] = temstaff;
+        } catch (Exception e) {
+            Toast.makeText(InsertActivity.this, "不能有空或者非数字", Toast.LENGTH_SHORT).show();
+            throw new NullValueException();
+        }
+        // TODO 判断空
+        Log.e("save", staff[index].toString());
+        Log.e("save", staff[index].toString());
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if (drawer != null) {
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -271,11 +278,6 @@ public class InsertActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.bluetooth){
-
-
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -286,17 +288,37 @@ public class InsertActivity extends AppCompatActivity
         return true;
     }
 
-    private void makeOrder(){
-
+    private Order makeOrder() throws NullValueException, NotNumberException {
+        IdentityHashMap<String, String> attributes = new IdentityHashMap<String, String>();
+        IdentityHashMap<String, Integer> fee = new IdentityHashMap<>();
+        for (int i = 9; i < edit.length; i++) {
+            if ((mse.get(edit[i]).getText().toString() == "")) throw new NullValueException();
+            try {
+                fee.put(FEE[i - 9], Integer.parseInt(mse.get(edit[i]).getText().toString()));
+            } catch (Exception e) {
+                throw new NotNumberException();
+            }
+        }
+        for (int i = 0; i <= 6; i++) {
+            attributes.put(ATTR[i], mse.get(edit[i]).getText().toString());
+        }
+        attributes.put("付款方式", mss.get("payway").getSelectedItem().toString());
+        attributes.put("返款方式1", mss.get("Ffankuan").getSelectedItem().toString());
+        attributes.put("返款方式2", mss.get("Tfankuan").getSelectedItem().toString());
+        //TODO 验证合法性
+        return new Order(attributes, fee, Arrays.asList(staff));
     }
+
     class ConnectThread extends Thread {
         public final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
         private byte[] mbyte;
-        public ConnectThread(BluetoothDevice device,byte[] mbyte) {
+
+        public ConnectThread(BluetoothDevice device, byte[] mbyte) {
             this.mbyte = mbyte;
             BluetoothSocket tmp = null;
             mmDevice = device;
+
             try {
                 // 通过 BluetoothDevice 获得 BluetoothSocket 对象
                 tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
@@ -304,41 +326,44 @@ public class InsertActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             mmSocket = tmp;
+            Toast.makeText(InsertActivity.this, "socket:" + (mmSocket == null), Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void run() {
-            // 建立连接前记得取消设备发现
             try {
-                // 耗时操作，所以必须在主线程之外进行
                 mmSocket.connect();
-                if(mmSocket.isConnected()){
-                    try{
+                Log.e("mmconnect", "" + mmSocket.isConnected());
+                if (mmSocket.isConnected()) {
+                    try {
                         OutputStream outputStream = mmSocket.getOutputStream();
-                        outputStream.write(mbyte);
+                        Log.e("mmconnect", "" + (outputStream == null));
+                        assert outputStream != null;
+                        outputStream.write(0x1b);
+                        outputStream.write(0x40);
+                        outputStream.write(new byte[]{65, 66, 67, '\n'});
                         outputStream.flush();
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             } catch (IOException connectException) {
-                //处理连接建立失败的异常
                 try {
                     mmSocket.close();
-                } catch (IOException closeException) { }
-                return;
+                } catch (IOException closeException) {
+                    closeException.printStackTrace();
+                }
             }
         }
 
-        //关闭一个正在进行的连接
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) { }
-        }
     }
 
+}
 
+class NullValueException extends Exception {
+
+}
+
+class NotNumberException extends Exception {
 
 }

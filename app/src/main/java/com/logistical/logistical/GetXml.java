@@ -32,20 +32,9 @@ public class GetXml {
                         "                        android:layout_width=\"match_parent\"\n" +
                         "                        android:layout_height=\"wrap_content\"\n" +
                         "                        android:text=\"货物信息\"\n" +
+                        "                        android:textSize=\"20dp\"\n"+
                         "                        android:id=\"@+id/staffinfo\"\n" +
-                        "                        />\n" +
-                        "                    <com.getbase.floatingactionbutton.AddFloatingActionButton\n" +
-                        "                        android:id=\"@+id/addStaff\"\n" +
-                        "                        android:layout_alignParentRight=\"true\"\n" +
-                        "                        android:layout_width=\"wrap_content\"\n" +
-                        "                        android:layout_height=\"wrap_content\"\n" +
-                        "                        fab:fab_plusIconColor=\"@color/half_black\"\n" +
-                        "                        fab:fab_colorNormal=\"@color/white\"\n" +
-                        "                        fab:fab_colorPressed=\"@color/white_pressed\"\n" +
-                        "                        android:layout_marginBottom=\"16dp\"\n" +
-                        "                        android:maxWidth=\"16dp\"\n" +
-                        "                        android:maxHeight=\"16dp\"\n" +
-                        "                        android:layout_marginStart=\"16dp\"/>\n" +
+                        "                        />\n"+
                         "                </RelativeLayout>\n" +
                         "\n" +
                         "                <LinearLayout style=\"@style/common_horizontal_division_line_style\"></LinearLayout>\n" +
@@ -76,6 +65,7 @@ public class GetXml {
                         "                <TextView\n" +
                         "                    android:layout_width=\"match_parent\"\n" +
                         "                    android:layout_height=\"wrap_content\"\n" +
+                                            "android:textSize=\"20dp\"\n"+
                         "                    android:text=\"价格信息\" />\n" +
                         "\n" +
                         "                <LinearLayout style=\"@style/common_horizontal_division_line_style\"></LinearLayout>");
@@ -139,7 +129,8 @@ public class GetXml {
     }
 
     public static void printCg(int i) {
-        System.out.println("<TextView\n" + "android:layout_width=\"match_parent\"\n"
+        System.out.println("<TextView\n" + "android:layout_width=\"match_parent\"\n" +
+                " \"android:textSize=\\\"20dp\\\"\\n\"+\n"
                 + "android:layout_height=\"wrap_content\"\n" + "android:text=\"" + INFO[i] + "\"/>\n");
         System.out.println(" <LinearLayout style=\"@style/common_horizontal_division_line_style\"></LinearLayout>");
     }
