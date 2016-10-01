@@ -24,6 +24,7 @@
 
     <include android:id="@+id/insert_layout"
         layout="@layout/insert_layout"></include>
-
+    <include android:id="@+id/query_layout"
+        layout="@layout/query_layout"></include>
 
 </android.support.design.widget.CoordinatorLayout>

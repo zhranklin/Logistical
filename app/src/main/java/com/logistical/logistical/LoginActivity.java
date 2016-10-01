@@ -1,7 +1,6 @@
 package com.logistical.logistical;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
         ID =(TextView) findViewById(R.id.ID);
         final CircularProgressButton login =  (CircularProgressButton) findViewById(R.id.loginButton);
 
+        assert login != null;
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

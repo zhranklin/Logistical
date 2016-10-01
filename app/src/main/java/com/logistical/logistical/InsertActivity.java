@@ -8,8 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,22 +22,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.logistical.model.*;
 
+import com.logistical.model.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,8 +51,9 @@ public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
     HashMap<String, Spinner> mss = new HashMap<String, Spinner>();
-    private ArrayList<String> StaffString = new ArrayList<String>();
+    private ArrayList<String> StaffString = new ArrayList<>();
     private ArrayAdapter<String> StaffAdapter;
+    private ListViewAdapter listviewadapter;
     private final int REQUEST_ENABLE_BT = 1;
     public static final String edit[] = {"Fstation2", "Tstation2", "danhao",
             "Fname", "Ftel", "Tname", "Ttel", "number", "uniprice", "daishou", "fankuan", "baojia", "jiehuo", "songyun",
@@ -57,9 +66,13 @@ public class InsertActivity extends AppCompatActivity
     };
     private int ID, totindex = 1;
     private Button addStaff, saveStaff, confirm;
+    private ListView listview;
     private Staff staff[] = new Staff[100];
-    private View insert, query;
-
+    private View insert_layout, query_layout;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +94,23 @@ public class InsertActivity extends AppCompatActivity
             public boolean onNavigationItemSelected(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.query) {
-                    insert.setVisibility(View.GONE);
-                    query.setVisibility(View.VISIBLE);
+                    insert_layout.setVisibility(View.GONE);
+                    query_layout.setVisibility(View.VISIBLE);
+                    listview = (ListView) findViewById(R.id.list_view);
+                    Order itemlist[] = new Order[2];
+                    IdentityHashMap<String, String> att = new IdentityHashMap<String, String>();
+                    IdentityHashMap<String, Integer> fee = new IdentityHashMap<String, Integer>();
+                    ArrayList stf = new ArrayList();
+                    stf.add(new Staff("大","小",1,2));
+                    for(int i=0;i<ATTR.length;i++) att.put(ATTR[i],""+i);
+                    for(int i=0;i<FEE.length;i++) fee.put(FEE[i],i);
+                    itemlist[0] = new Order(att,fee, stf);
+                    itemlist[1] = new Order(att,fee,stf);
+                    listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item, Arrays.asList(itemlist));
+                    listview.setAdapter(listviewadapter);
                 } else if (id == R.id.insert) {
+                    insert_layout.setVisibility(View.VISIBLE);
+                    query_layout.setVisibility(View.GONE);
                     staff = new Staff[100];
                     totindex = 1;
                     for (String anEdit : edit) {
@@ -211,12 +238,16 @@ public class InsertActivity extends AppCompatActivity
                 }
             }
         });
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
     private void init() throws NoSuchFieldException, IllegalAccessException {
         addStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Addstaff);
         saveStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Savestaff);
         confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
+        query_layout = findViewById(R.id.query_layout);
+        insert_layout = findViewById(R.id.insert_layout);
         staff[1] = new Staff();
         for (String anEdit : edit) {
             Field r = R.id.class.getField(anEdit);
@@ -309,6 +340,8 @@ public class InsertActivity extends AppCompatActivity
         return new Order(attributes, fee, Arrays.asList(staff));
     }
 
+
+
     class ConnectThread extends Thread {
         public final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
@@ -333,6 +366,7 @@ public class InsertActivity extends AppCompatActivity
         public void run() {
             try {
                 mmSocket.connect();
+                String tmp = mse.get("danhao").getText().toString();
                 Log.e("mmconnect", "" + mmSocket.isConnected());
                 if (mmSocket.isConnected()) {
                     try {
@@ -347,6 +381,7 @@ public class InsertActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                 }
+                if (mmSocket.isConnected()) mmSocket.close();
             } catch (IOException connectException) {
                 try {
                     mmSocket.close();
@@ -357,6 +392,7 @@ public class InsertActivity extends AppCompatActivity
         }
 
     }
+
 
 }
 
