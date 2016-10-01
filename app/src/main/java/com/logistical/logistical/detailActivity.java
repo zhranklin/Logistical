@@ -21,7 +21,7 @@ public class detailActivity extends AppCompatActivity {
 
     private final String[] Chinese = {"发站", "到站", "客户单号",
             "发货人", "发货人电话", "收货人", "收货人电话", "付款方式", "返款方", "返款方式1", "返款方式2",
-            "代收款", "返款方", "保价费", "接货费", "送货费","总运费",
+            "代收款", "返款费", "保价费", "接货费", "送货费","总运费",
             "总件数", "总价"};
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
     @Override
@@ -45,6 +45,7 @@ public class detailActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Order order = (Order) intent.getSerializableExtra("order");
+        Log.e("aaa","aaa"+order.getAttribute("客户单号"));
         for(int i=0;i<edit.length;i++) {
             mse.get(edit[i]).setFocusable(false);
             if(i<=10){

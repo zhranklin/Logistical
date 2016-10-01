@@ -34,6 +34,7 @@ import android.widget.Toast;
 import com.logistical.model.*;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -111,10 +112,13 @@ public class InsertActivity extends AppCompatActivity
                     listview.setAdapter(listviewadapter);
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {;
                             Order order = OrderList.get(position);
+                            Log.e("aaa","bbb"+order.getAttribute("客户单号"));
                             Intent intent = new Intent(InsertActivity.this,detailActivity.class);
-                            intent.putExtra("order",order);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("order",order);
+                            intent.putExtras(bundle);
                             startActivity(intent);
                         }
                     });

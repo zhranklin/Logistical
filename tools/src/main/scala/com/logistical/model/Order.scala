@@ -21,6 +21,7 @@ object Order {
   * @param fees       费用的键值对Map, 见FEE_NAMES
   * @param staff      商品的List
   */
+@SerialVersionUID(-7060210544600464481L)
 class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) extends Serializable {
   /**
     * 获取订单的某个属性的值
@@ -48,7 +49,7 @@ class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var s
     if (name == "总运费")
       staff.asScala.map(s ⇒ s.number * s.price).sum
     else
-      Option[Int](fees get name) getOrElse(0)
+      Option[Integer](fees get name).map(_.toInt) getOrElse(0)
   }
 
   /**
