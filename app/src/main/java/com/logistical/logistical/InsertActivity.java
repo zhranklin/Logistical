@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -69,6 +70,7 @@ public class InsertActivity extends AppCompatActivity
     private ListView listview;
     private Staff staff[] = new Staff[100];
     private View insert_layout, query_layout;
+    private ArrayList<Order> OrderList;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -97,17 +99,29 @@ public class InsertActivity extends AppCompatActivity
                     insert_layout.setVisibility(View.GONE);
                     query_layout.setVisibility(View.VISIBLE);
                     listview = (ListView) findViewById(R.id.list_view);
-                    Order itemlist[] = new Order[2];
                     IdentityHashMap<String, String> att = new IdentityHashMap<String, String>();
                     IdentityHashMap<String, Integer> fee = new IdentityHashMap<String, Integer>();
                     ArrayList stf = new ArrayList();
                     stf.add(new Staff("大","小",1,2));
                     for(int i=0;i<ATTR.length;i++) att.put(ATTR[i],""+i);
                     for(int i=0;i<FEE.length;i++) fee.put(FEE[i],i);
-                    itemlist[0] = new Order(att,fee, stf);
-                    itemlist[1] = new Order(att,fee,stf);
-                    listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item, Arrays.asList(itemlist));
+                    OrderList = new ArrayList<Order>();
+                    OrderList.add(new Order(att,fee, stf));
+                    OrderList.add( new Order(att,fee,stf));
+                    OrderList.add( new Order(att,fee,stf));
+                    OrderList.add( new Order(att,fee,stf));
+                    listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item,OrderList);
                     listview.setAdapter(listviewadapter);
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Order order = OrderList.get(position);
+                            Intent intent = new Intent(InsertActivity.this,detailActivity.class);
+                            intent.putExtra("order",order);
+                            startActivity(intent);
+                        }
+                    });
+
                 } else if (id == R.id.insert) {
                     insert_layout.setVisibility(View.VISIBLE);
                     query_layout.setVisibility(View.GONE);
@@ -238,6 +252,7 @@ public class InsertActivity extends AppCompatActivity
                 }
             }
         });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
@@ -248,6 +263,8 @@ public class InsertActivity extends AppCompatActivity
         confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
         query_layout = findViewById(R.id.query_layout);
         insert_layout = findViewById(R.id.insert_layout);
+        query_layout.setVisibility(View.GONE);
+        insert_layout.setVisibility(View.VISIBLE);
         staff[1] = new Staff();
         for (String anEdit : edit) {
             Field r = R.id.class.getField(anEdit);
@@ -366,34 +383,31 @@ public class InsertActivity extends AppCompatActivity
         public void run() {
             try {
                 mmSocket.connect();
-                String tmp = mse.get("danhao").getText().toString();
+                String text = mse.get("danhao").getText().toString();
                 Log.e("mmconnect", "" + mmSocket.isConnected());
                 if (mmSocket.isConnected()) {
                     try {
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                        outputStream.write(0x1b);
-                        outputStream.write(0x40);
-                        outputStream.write(new byte[]{65, 66, 67, '\n'});
-                        outputStream.flush();
+                 //       PrintWork.testPrintWork1(outputStream).run();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-                if (mmSocket.isConnected()) mmSocket.close();
-            } catch (IOException connectException) {
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
                 try {
-                    mmSocket.close();
+                    if (mmSocket.isConnected())
+                        mmSocket.close();
                 } catch (IOException closeException) {
                     closeException.printStackTrace();
                 }
+
             }
         }
-
     }
-
-
 }
 
 class NullValueException extends Exception {

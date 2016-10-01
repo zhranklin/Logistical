@@ -35,8 +35,8 @@ class ListViewAdapter extends ArrayAdapter<Order> {
         ItemId.setText(order.getAttribute("客户单号"));
         ItemFname.setText(order.getAttribute("发货人"));
         ItemTname.setText(order.getAttribute("收货人"));
-        ItemTotFee.setText(order.getTotalFee());
-        ItemNumber.setText(order.getTotalNumber());
+        ItemTotFee.setText(""+order.getTotalFee());
+        ItemNumber.setText(""+order.getTotalNumber());
         return view;
     }
 

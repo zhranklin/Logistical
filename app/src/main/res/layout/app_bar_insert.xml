@@ -8,23 +8,37 @@
     tools:context="com.logistical.logistical.InsertActivity"
     android:id="@+id/app_bar_insert">
 
-    <android.support.design.widget.AppBarLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:id="@+id/barlayout"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    <include android:id="@+id/insert_layout"
-        layout="@layout/insert_layout"></include>
-    <include android:id="@+id/query_layout"
-        layout="@layout/query_layout"></include>
+        </android.support.design.widget.AppBarLayout>
 
+        <include
+            android:layout_below="@id/barlayout"
+            android:id="@+id/insert_layout"
+            layout="@layout/insert_layout"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"/>
+
+        <include
+            android:layout_below="@id/barlayout"
+            android:id="@+id/query_layout"
+            layout="@layout/query_layout"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent" />
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

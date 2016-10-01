@@ -21,7 +21,7 @@ object Order {
   * @param fees       费用的键值对Map, 见FEE_NAMES
   * @param staff      商品的List
   */
-class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) {
+class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) extends Serializable {v
   /**
     * 获取订单的某个属性的值
     *
@@ -32,7 +32,7 @@ class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var s
   @throws[IllegalArgumentException]
   def getAttribute(name: String): String = {
     if (!Order.ATTRIBUTE_NAMES.contains(name)) throw new IllegalArgumentException("该属性名称不存在: " + name)
-    attributes.getOrDefault(name, "")
+    Option(attributes.get(name)).getOrElse("")
   }
 
   /**
@@ -48,7 +48,7 @@ class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var s
     if (name == "总运费")
       staff.asScala.map(s ⇒ s.number * s.price).sum
     else
-      fees.getOrDefault(name, 0)
+      Option[Int](fees get name) getOrElse(0)
   }
 
   /**
@@ -56,7 +56,7 @@ class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var s
     *
     * @return 所有费用加起来的总和, 包括运费和各种杂项费用
     */
-  def getTotalFee: Int = Order.FEE_NAMES.asScala.map(fees.getOrDefault(_, 0).toInt).sum
+  def getTotalFee: Int = Order.FEE_NAMES.asScala.map(getFee).sum
 
   /**
     * 返回总件数, 由所有的Staff中的数量相加而得
