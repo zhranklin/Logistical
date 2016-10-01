@@ -398,7 +398,26 @@
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="返款从" />
+
+                    <Spinner
+                        android:id="@+id/fankuanfang"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/fankuanfang"
+                        android:layout_weight="1">
+
+                    </Spinner>
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -21,7 +21,7 @@ object Order {
   * @param fees       费用的键值对Map, 见FEE_NAMES
   * @param staff      商品的List
   */
-class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) extends Serializable {v
+class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) extends Serializable {
   /**
     * 获取订单的某个属性的值
     *

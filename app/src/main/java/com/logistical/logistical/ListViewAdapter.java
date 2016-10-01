@@ -25,7 +25,7 @@ class ListViewAdapter extends ArrayAdapter<Order> {
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        Order order = (Order)getItem(position);
+        Order order = getItem(position);
         View view = LayoutInflater.from(getContext()).inflate(resouceId,null);
         TextView ItemId = (TextView) view.findViewById(R.id.itemId);
         TextView ItemFname = (TextView) view.findViewById(R.id.itemFname);

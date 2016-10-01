@@ -8,11 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -56,14 +53,14 @@ public class InsertActivity extends AppCompatActivity
     private ArrayAdapter<String> StaffAdapter;
     private ListViewAdapter listviewadapter;
     private final int REQUEST_ENABLE_BT = 1;
-    public static final String edit[] = {"Fstation2", "Tstation2", "danhao",
+    private static final String edit[] = {"Fstation2", "Tstation2", "danhao",
             "Fname", "Ftel", "Tname", "Ttel", "number", "uniprice", "daishou", "fankuan", "baojia", "jiehuo", "songyun",
             "totnumber", "tottranpay", "totpay"};
     private final String[] FEE = {"代收款", "返款费", "保价费", "接货费", "送货费", "总件数", "总运费", "总价"};
     private final String[] ATTR = {"发站", "到站", "客户单号", "发货人", "发货人电话", "收货人", "收货人电话", "付款方式",
             "返款方", "返款方式1", "返款方式2"};
     public static final String list[] = {
-            "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "Ffankuan", "Tfankuan",
+            "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "fankuanfang","Ffankuan", "Tfankuan"
     };
     private int ID, totindex = 1;
     private Button addStaff, saveStaff, confirm;
@@ -340,7 +337,7 @@ public class InsertActivity extends AppCompatActivity
         IdentityHashMap<String, String> attributes = new IdentityHashMap<String, String>();
         IdentityHashMap<String, Integer> fee = new IdentityHashMap<>();
         for (int i = 9; i < edit.length; i++) {
-            if ((mse.get(edit[i]).getText().toString() == "")) throw new NullValueException();
+            if ((mse.get(edit[i]).getText().toString().equals(""))) throw new NullValueException();
             try {
                 fee.put(FEE[i - 9], Integer.parseInt(mse.get(edit[i]).getText().toString()));
             } catch (Exception e) {
