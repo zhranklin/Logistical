@@ -257,16 +257,12 @@
                     android:orientation="horizontal"
                     android:gravity="right">
 
+
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:id="@+id/Addstaff_detail"
-                        android:text="保存并新增"/>
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/Savestaff_detail"
-                        android:text="保存"/>
+                        android:id="@+id/print_part"
+                        android:text="打印该货物"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -424,11 +420,7 @@
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                 </LinearLayout>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/confirm_detail"
-                    android:text="确认"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -475,7 +467,11 @@
                         android:singleLine="true"
                         android:hint="总价" />
                 </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/print_all"
+                    android:text="打印总标签"/>
             </LinearLayout>
         </RelativeLayout>
     </ScrollView>

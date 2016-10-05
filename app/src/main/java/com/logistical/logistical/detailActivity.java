@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ public class detailActivity extends AppCompatActivity {
             "代收款", "返款费", "保价费", "接货费", "送货费","总运费",
             "总件数", "总价"};
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
+    Button print_part,print_all;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +45,21 @@ public class detailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        print_all = (Button) findViewById(R.id.print_all);
+        print_part = (Button) findViewById(R.id.print_part);
+        print_all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        print_part.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+            }
+
+        });
         Intent intent = getIntent();
         Order order = (Order) intent.getSerializableExtra("order");
         Log.e("aaa","aaa"+order.getAttribute("客户单号"));
