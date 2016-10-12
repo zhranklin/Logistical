@@ -1,7 +1,10 @@
 package com.logistical.model
 
-import java.util.{Arrays ⇒ JArrays, List => JList, Map => JMap}
+import java.util.{Arrays ⇒ JArrays, List ⇒ JList, Map ⇒ JMap}
+
 import scala.collection.JavaConverters._
+import scala.util.Try
+import com.google.gson.Gson
 
 object Order {
   /**
@@ -12,6 +15,10 @@ object Order {
     * 可用的费用名称, 作为getFee的参数, 以及构造器中fee的键名
     */
   val FEE_NAMES: JList[String] = JArrays.asList("总运费", "代收款", "返款费", "保价费", "接货费", "送货费")
+
+  private[model] val gson = new Gson
+
+  def fromJson(json: String) = gson.fromJson(json, classOf[Order])
 }
 
 /**
@@ -77,4 +84,7 @@ class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var s
           .forall(f ⇒ getFee(f) == o.getFee(f)) &&
         staff == o.staff
     }
+
+  def toJson =
+    Order.gson.toJson(this, classOf[Order])
 }
