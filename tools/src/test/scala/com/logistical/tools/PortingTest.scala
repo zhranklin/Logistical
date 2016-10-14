@@ -3,7 +3,7 @@ package com.logistical.tools
 import java.io.{BufferedReader, StringReader, StringWriter}
 
 import com.logistical.model.Order
-import org.scalatest.FlatSpec
+import org.scalatest._
 
 import scala.collection.JavaConverters._
 

@@ -2,9 +2,29 @@ package com.logistical.tools
 
 import java.io.{ByteArrayOutputStream, OutputStream, OutputStreamWriter}
 
+import com.logistical.model.Order
+
 import scala.annotation.varargs
 
 object PrintWork {
+  import Font._
+
+  def testPrintWork(o: OutputStream) = builder().text("你妈嗨").build(o)
+  def testPrintWork1(o: OutputStream) = builder()
+    .text("默认")
+//    .lMargin(8)
+//    .rMargin(8)
+    .fontSize(0).text("大号")
+    .fontSize(1).text("中号")
+    .fontSize(2).text("小号")
+    .font(ITALIC).text("斜体")
+    .font(BOLD).text("粗体")
+    .font(DOUBLE_HEIGHT).text("倍高")
+    .font(DOUBLE_WIDTH).text("倍宽")
+    .font(FRAME).text("边框")
+    .font(UNDERLINE).text("下划线\n")
+    .barcode("12345678")
+    .build(o)
 
   /**
     * 获得一个builder, 用来构造PrintWork
@@ -31,12 +51,23 @@ object PrintWork {
 
     private val bao = new ByteArrayOutputStream()
     private val writer = new OutputStreamWriter(bao, encoding)
-    private val K = 0x1B
+    private val ESC = 0x1B
+    private val GS = 0x1D
 
     //初始化打印机
-    write(K, 0x40)
+    write(ESC, 0x40)
+    write(GS, 'h', 30)
+    align(1)
 
-    private def write(chars: Int*): Builder = {
+    /**
+      * 打印订单 未分页
+      * @param o 订单对象
+      */
+    def printOrder(o: Order) = {
+
+    }
+
+    def write(chars: Int*): Builder = {
       chars foreach writer.write
       this
     }
@@ -56,7 +87,7 @@ object PrintWork {
       * @param align 0: 左对齐(默认), 1: 居中, 2: 右对齐
       * @return this
       */
-    def align(align: Int): Builder = write(K, 0x61, align)
+    def align(align: Int): Builder = write(ESC, 0x61, align)
 
     /**
       * 打印制表符
@@ -70,16 +101,16 @@ object PrintWork {
       * @param gap 行间距的像素点数, 最大值255
       * @return this
       */
-    def gap(gap: Int): Builder = write(K, 0x33, gap)
+    def gap(gap: Int): Builder = write(ESC, 0x33, gap)
 
     /**
       * 设置左边距
       * @param margin 以8点为单位, 范围(左+右): 58mm宽: [0, 48), 80mm宽: [0, 72)
       * @return this
       */
-    def lMargin(margin: Int): Builder = write(K, 0x6C, margin)
+    def lMargin(margin: Int): Builder = write(ESC, 0x6C, margin)
 
-    def rMargin(margin: Int): Builder = write(K, 0x51, margin)
+    def rMargin(margin: Int): Builder = write(ESC, 0x51, margin)
 
     /**
       * 设置字体样式
@@ -89,7 +120,7 @@ object PrintWork {
     @varargs def font(fonts: Font*): Builder = {
       val fontTable = Font.values map
         (font => if (fonts contains font) 1 else 0)
-      write(K, 0x21, (0 /: fontTable) (_ * 2 + _))
+      write(ESC, 0x21, (0 /: fontTable) (_ * 2 + _))
     }
 
     /**
@@ -101,7 +132,7 @@ object PrintWork {
       * @param size 范围为[0, 2]
       * @return this
       */
-    def fontSize(size: Int): Builder = write(K, 0x4D, size)
+    def fontSize(size: Int): Builder = write(ESC, 0x4D, size)
 
     /**
       * 打印条形码, 使用CODE128编码, 支持所有ASCII字符
@@ -122,6 +153,10 @@ object PrintWork {
       writer.flush()
       new PrintWork(bao.toByteArray, outputStream)
     }
+  }
+
+  def handleCmd(cmd: String)(implicit builder: Builder): Unit = cmd match {
+    case null ⇒ builder.lMargin(0)
   }
 
 }
