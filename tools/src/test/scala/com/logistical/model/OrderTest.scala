@@ -1,5 +1,7 @@
 package com.logistical.model
 
+import java.util.Date
+
 import com.google.gson.Gson
 import org.scalatest.FlatSpec
 
@@ -74,5 +76,5 @@ object OrderExamples {
   )
   val staff = staffL.head
 
-  val order = new Order(attrs, fees, staff)
+  val order = new Order(attrs, fees, staff, "bar")
 }

@@ -1,5 +1,5 @@
 package com.logistical.tools;
 
 public enum Font {
-  ITALIC, FRAME, BOLD, DOUBLE_HEIGHT, DOUBLE_WIDTH, INVERSE, UNDERLINE
+  P_H1, DOUBLE_WIDTH, DOUBLE_HEIGHT, BOLD, P_H2, INVERSE, P_H3
 }

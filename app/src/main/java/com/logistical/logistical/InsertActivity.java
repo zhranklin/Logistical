@@ -9,41 +9,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.*;
+import com.logistical.model.Order;
+import com.logistical.model.Staff;
+import com.logistical.tools.PrintWork;
 
-
-import com.logistical.model.*;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 
 public class InsertActivity extends AppCompatActivity
@@ -104,10 +88,10 @@ public class InsertActivity extends AppCompatActivity
                     for(int i=0;i<ATTR.length;i++) att.put(ATTR[i],""+i);
                     for(int i=0;i<FEE.length;i++) fee.put(FEE[i],i);
                     OrderList = new ArrayList<Order>();
-                    OrderList.add(new Order(att,fee, stf));
-                    OrderList.add( new Order(att,fee,stf));
-                    OrderList.add( new Order(att,fee,stf));
-                    OrderList.add( new Order(att,fee,stf));
+                    OrderList.add(new Order(att,fee, stf, "bar"));
+                    OrderList.add( new Order(att,fee,stf, "bar"));
+                    OrderList.add( new Order(att,fee,stf, "bar"));
+                    OrderList.add( new Order(att,fee,stf, "bar"));
                     listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item,OrderList);
                     listview.setAdapter(listviewadapter);
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -355,7 +339,7 @@ public class InsertActivity extends AppCompatActivity
         attributes.put("返款方式1", mss.get("Ffankuan").getSelectedItem().toString());
         attributes.put("返款方式2", mss.get("Tfankuan").getSelectedItem().toString());
         //TODO 验证合法性
-        return new Order(attributes, fee, Arrays.asList(staff));
+        return new Order(attributes, fee, Arrays.asList(staff), "bar");
     }
 
 
@@ -391,7 +375,7 @@ public class InsertActivity extends AppCompatActivity
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                 //       PrintWork.testPrintWork1(outputStream).run();
+                        PrintWork.testPrintWork1(outputStream).run();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
