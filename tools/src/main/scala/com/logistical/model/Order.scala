@@ -1,6 +1,7 @@
 package com.logistical.model
 
-import java.util.{Arrays ⇒ JArrays, List ⇒ JList, Map ⇒ JMap}
+import java.text.SimpleDateFormat
+import java.util.{Date, Arrays ⇒ JArrays, List ⇒ JList, Map ⇒ JMap}
 
 import scala.collection.JavaConverters._
 import scala.util.Try
@@ -19,6 +20,14 @@ object Order {
   private[model] val gson = new Gson
 
   def fromJson(json: String) = gson.fromJson(json, classOf[Order])
+
+  val df = new SimpleDateFormat("yyyy/MM/dd")
+  def getBarcode(prefix: String, time: Date, id: Int) = {
+    val date = df.format(time)
+    val seconds = (time.getTime - new Date(date).getTime) / 1000
+    val dNum = date.drop(2).filter(_ != '/')
+    f"$prefix$dNum$id%03d$seconds%05d"
+  }
 }
 
 /**
@@ -29,7 +38,7 @@ object Order {
   * @param staff      商品的List
   */
 @SerialVersionUID(-7060210544600464481L)
-class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff]) extends Serializable {
+class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff], var bar: String) extends Serializable {
   /**
     * 获取订单的某个属性的值
     *

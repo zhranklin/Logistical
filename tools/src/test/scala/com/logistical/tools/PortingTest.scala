@@ -1,6 +1,7 @@
 package com.logistical.tools
 
 import java.io.{BufferedReader, StringReader, StringWriter}
+import java.util.Date
 
 import com.logistical.model.Order
 import org.scalatest._
@@ -23,7 +24,7 @@ class PortingTest extends FlatSpec {
       attr ← attrsL
       fee ← feesL
       staff ← staffL
-    } yield new Order(attr, fee, staff)
+    } yield new Order(attr, fee, staff, "bar")
 
     val sw = new StringWriter
     porting.exp(orders.asJava, sw)
