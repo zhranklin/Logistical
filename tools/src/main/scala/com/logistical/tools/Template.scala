@@ -1,13 +1,14 @@
 package com.logistical.tools
 
+import java.io.OutputStream
+
 import com.logistical.model.Order
 
-import java.io.OutputStream
 import scala.util.Try
 
 /**
-  * Created by Zhranklin on 16/10/3.
-  */
+ * Created by Zhranklin on 16/10/3.
+ */
 class OrderTemplate(tpl: String) {
 
   implicit class RichOrder(o: Order) {
@@ -21,6 +22,7 @@ class OrderTemplate(tpl: String) {
   val CMD = "<(.+?)>(.*)".r
   val ATTR = "{(.+?)}(.*)".r
   val OTHER = "([^<{]+)(.*)".r
+
   def render(order: Order, o: OutputStream) = {
     implicit val builder = PrintWork.builder()
     def rend(tpl: String): Unit = tpl match {
