@@ -19,15 +19,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.logistical.model.Order;
 import com.logistical.model.Staff;
+import com.logistical.tools.Porting;
 import com.logistical.tools.PrintWork;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 
 public class InsertActivity extends AppCompatActivity
@@ -47,12 +68,17 @@ public class InsertActivity extends AppCompatActivity
     public static final String list[] = {
             "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "fankuanfang","Ffankuan", "Tfankuan"
     };
-    private int ID, totindex = 1;
+    private String ID;
+    private int totindex = 1;
     private Button addStaff, saveStaff, confirm;
     private ListView listview;
     private Staff staff[] = new Staff[100];
     private View insert_layout, query_layout;
     private ArrayList<Order> OrderList;
+    private String MAC;
+    private EditText py1,py2;
+    private Order order;
+    Porting pt = new Porting(null);
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -62,7 +88,8 @@ public class InsertActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
-        ID = getIntent().getIntExtra("ID", 0);
+        ID = getIntent().getStringExtra("ID");
+        MAC = getIntent().getStringExtra("MAC");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,6 +99,15 @@ public class InsertActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Log.d("test","init");
+        try {
+            init();
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchFieldException e1) {
+            e1.printStackTrace();
+        }
+
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -100,9 +136,8 @@ public class InsertActivity extends AppCompatActivity
                             Order order = OrderList.get(position);
                             Log.e("aaa","bbb"+order.getAttribute("客户单号"));
                             Intent intent = new Intent(InsertActivity.this,detailActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("order",order);
-                            intent.putExtras(bundle);
+                            String Sorder = order.toJson();
+                            intent.putExtra("order",Sorder);
                             startActivity(intent);
                         }
                     });
@@ -128,9 +163,7 @@ public class InsertActivity extends AppCompatActivity
 
                 } else if (id == R.id.export) {
 
-                } else if (id == R.id.print) {
-
-                } else if (id == R.id.bluetooth) {
+                }  else if (id == R.id.print) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
                         Toast.makeText(InsertActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
@@ -190,13 +223,37 @@ public class InsertActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         TextView TextForId = (TextView) header.findViewById(R.id.TextForID);
         TextForId.setText("" + ID);
-        try {
-            init();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchFieldException e1) {
-            e1.printStackTrace();
-        }
+        mss.get("staffnum").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                
+                int tmp = Integer.parseInt(parent.getSelectedItem().toString());
+                Log.d("staff",""+tmp);
+                Log.d("staff",staff[tmp].toString());
+                if (staff[tmp].getNumber()!=0) {
+                    mse.get("number").setText(""+staff[tmp].getNumber());
+                    mse.get("uniprice").setText(""+staff[tmp].getPrice());
+                    Spinner cate1 = mss.get("category1");
+                    for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
+                        if (cate1.getAdapter().getItem(i).toString().equals(staff[tmp].getType()))
+                            cate1.setSelection(i);
+                    }
+                    Spinner cate2 = mss.get("category2");
+                    for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
+                        if (cate1.getAdapter().getItem(i).toString().equals(staff[tmp].getSubType()))
+                            cate2.setSelection(i);
+                    }
+                }
+                if(tmp<totindex) addStaff.setVisibility(View.GONE);
+                else addStaff.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         addStaff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -206,7 +263,9 @@ public class InsertActivity extends AppCompatActivity
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                     return;
                 }
+
                 StaffString.add("" + (++totindex));
+                staff[totindex]=new Staff();
                 // StaffAdapter.add("" + (++totindex));
                 mss.get("staffnum").setSelection(totindex - 1);
                 mss.get("category1").setSelection(0);
@@ -228,21 +287,80 @@ public class InsertActivity extends AppCompatActivity
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Order order=null;
                 try {
-                    Order order = makeOrder();
+                  order= makeOrder();
                 } catch (NullValueException e1) {
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                 } catch (NotNumberException e2) {
                     Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_LONG).show();
                 }
+              //  addFile(order);
             }
         });
+        Log.d("test","Fstation"+(mss.get("Fstation")));
+        ((Spinner)mss.get("Fstation")).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==2){
+                    findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Fstation2_T).setVisibility(View.VISIBLE);
+                    py1.setText("");
+                    mse.get("Fstation2").setText("");
+                }
+                else {
+                    if(position==0){
+                        py1.setText("cd");
+                        mse.get("Fstation2").setText("成都");
 
+                    }
+                    else {
+                        py1.setText("pzh");
+                        mse.get("Fstation2").setText("攀枝花");
+                    }
+                    findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Fstation2_T).setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+        mss.get("Tstation").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("tstaion","in");
+                if(position==2){
+                    findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Tstation2_T).setVisibility(View.VISIBLE);
+                    py2.setText("");
+                    mse.get("Tstation2").setText("");
+                }
+                else {
+                    if(position==0){
+                        py2.setText("cd");
+                        mse.get("Tstation2").setText("成都");
+                    }
+                    else {
+                        py2.setText("pzh");
+                        mse.get("Tstation2").setText("攀枝花");
+                    }
+                    findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Tstation2_T).setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
     private void init() throws NoSuchFieldException, IllegalAccessException {
+        Log.d("test","null:"+(findViewById(R.id.main_content).findViewById(R.id.insert_layout)==null));
         addStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Addstaff);
         saveStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Savestaff);
         confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
@@ -254,16 +372,23 @@ public class InsertActivity extends AppCompatActivity
         for (String anEdit : edit) {
             Field r = R.id.class.getField(anEdit);
             mse.put(anEdit, (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
+            Log.d("test",anEdit);
         }
         for (String aList : list) {
             Field r = R.id.class.getField(aList);
             mss.put(aList, (Spinner) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
-
+            Log.d("test",aList);
         }
+        py1 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py1);
+        py2 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py2);
         StaffString.add("1");
         StaffAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, StaffString);
         StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         mss.get("staffnum").setAdapter(StaffAdapter);
+        Log.d("test","init+Fstation"+(mss.get("Fstation")==null));
+        for(int i=9;i<=13;i++) {
+            mse.get(edit[i]).setText("0");
+        }
 
     }
 
@@ -278,7 +403,6 @@ public class InsertActivity extends AppCompatActivity
             throw new NullValueException();
         }
         // TODO 判断空
-        Log.e("save", staff[index].toString());
         Log.e("save", staff[index].toString());
     }
 
@@ -324,11 +448,12 @@ public class InsertActivity extends AppCompatActivity
     private Order makeOrder() throws NullValueException, NotNumberException {
         IdentityHashMap<String, String> attributes = new IdentityHashMap<String, String>();
         IdentityHashMap<String, Integer> fee = new IdentityHashMap<>();
-        for (int i = 9; i < edit.length; i++) {
+        for (int i = 9; i <=13; i++) {
             if ((mse.get(edit[i]).getText().toString().equals(""))) throw new NullValueException();
             try {
                 fee.put(FEE[i - 9], Integer.parseInt(mse.get(edit[i]).getText().toString()));
             } catch (Exception e) {
+                Log.d("order","1:"+i);
                 throw new NotNumberException();
             }
         }
@@ -339,8 +464,76 @@ public class InsertActivity extends AppCompatActivity
         attributes.put("返款方式1", mss.get("Ffankuan").getSelectedItem().toString());
         attributes.put("返款方式2", mss.get("Tfankuan").getSelectedItem().toString());
         //TODO 验证合法性
-        return new Order(attributes, fee, Arrays.asList(staff), "bar");
+        List<Staff> tmp = new ArrayList<Staff>();
+        for(int i=1;i<=totindex;i++) {
+            tmp.add(staff[i]);
+        }
+        order= new Order(attributes, fee, tmp, Order.getBarcode(""+py1.getText()+py2.getText(),new Date(),Integer.parseInt(ID)));
+        Log.d("order",order.toJson());
+        mse.get("totnumber").setText(""+order.getTotalNumber());
+        mse.get("totpay").setText(""+order.getTotalFee());
+        mse.get("tottranpay").setText(""+order.getFee("总运费"));
+        return order;
     }
+    private void exportFile(){
+        String data="" ;
+        for(Order order :OrderList){
+         //   data+=order.toJson();
+        }
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter("/sdcard/" + new Date().getDay() + "日报表");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pt.exp(OrderList, fileWriter);
+            try {
+                assert fileWriter != null;
+                fileWriter.close();
+            } catch (IOException ex) {
+                Log.e("export", "export Error2");
+            }
+
+    }
+    private List<Order> getFile(){
+        List<Order> morders = new ArrayList<>();
+        FileInputStream in = null;
+        BufferedReader reader = null;
+        StringBuilder content = new StringBuilder();
+        try {
+            in = openFileInput("data");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        reader = new BufferedReader(new InputStreamReader((in)));
+        String line = "";
+        try {
+            while((line=reader.readLine())!=null){
+                content.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(reader!=null) try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return morders;
+    }
+    private void addFile(Order order){
+        String data = null;
+        try {
+            FileWriter fileWriter = new FileWriter("data");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 
 
@@ -375,7 +568,8 @@ public class InsertActivity extends AppCompatActivity
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                        PrintWork.testPrintWork1(outputStream).run();
+                        PrintWork.builder().printOrder(order).build(outputStream).run();
+                        outputStream.close();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -389,7 +583,6 @@ public class InsertActivity extends AppCompatActivity
                 } catch (IOException closeException) {
                     closeException.printStackTrace();
                 }
-
             }
         }
     }

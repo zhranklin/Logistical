@@ -22,7 +22,19 @@
             android:singleLine="true"
             android:hint="工号(ID)" />
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view2"
+        android:layout_below="@id/view">
 
+        <EditText
+            android:id="@+id/MAC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:hint="打印机MAC地址" />
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
     <com.dd.CircularProgressButton
         android:id="@+id/loginButton"
@@ -32,7 +44,6 @@
         android:textSize="12sp"
         app:cpb_cornerRadius="24dp"
         app:cpb_textIdle="Login"
-        android:layout_below="@+id/view"
-        android:layout_alignEnd="@+id/view" />
-
+        android:layout_below="@id/view2"
+        android:layout_alignEnd="@id/view2" />
 </RelativeLayout>

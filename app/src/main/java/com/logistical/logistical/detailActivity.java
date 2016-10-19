@@ -61,7 +61,8 @@ public class detailActivity extends AppCompatActivity {
 
         });
         Intent intent = getIntent();
-        Order order = (Order) intent.getSerializableExtra("order");
+        String Sorder =  intent.getStringExtra("order");
+        Order order = Order.fromJson(Sorder);
         Log.e("aaa","aaa"+order.getAttribute("客户单号"));
         for(int i=0;i<edit.length;i++) {
             mse.get(edit[i]).setFocusable(false);
