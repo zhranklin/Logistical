@@ -53,13 +53,11 @@ class Porting(errorHandler: ErrorHandler) {
     })
   }
 
-<<<<<<< HEAD
-=======
+
   def saveOrder(from: java.util.List[Order], to: Writer) =
     from.asScala.flatMap(o ⇒ Try(o.toJson) match {
       case Success(j) ⇒ Some(j)
       case Failure(_) ⇒ errorHandler.onError(s"导出订单${o.bar}时失败"); None
     })
 
->>>>>>> 450b0a7fdd1fc541bbe2461ec5ef980c586c6caa
 }

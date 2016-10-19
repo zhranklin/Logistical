@@ -11,6 +11,9 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+        jackOptions {
+            enabled true
+        }
     }
     buildTypes {
         release {
@@ -21,6 +24,10 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 

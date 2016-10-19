@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,30 +28,26 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.logistical.model.Order;
 import com.logistical.model.Staff;
 import com.logistical.tools.Porting;
 import com.logistical.tools.PrintWork;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-
+import scala.collection.immutable.Stream;
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
@@ -68,13 +65,14 @@ public class InsertActivity extends AppCompatActivity
     public static final String list[] = {
             "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "fankuanfang","Ffankuan", "Tfankuan"
     };
+    BroadcastReceiver mReceiver;
     private String ID;
     private int totindex = 1;
     private Button addStaff, saveStaff, confirm;
     private ListView listview;
     private Staff staff[] = new Staff[100];
     private View insert_layout, query_layout;
-    private ArrayList<Order> OrderList;
+    private ArrayList<Order> OrderList,neworder;
     private String MAC;
     private EditText py1,py2;
     private Order order;
@@ -137,6 +135,8 @@ public class InsertActivity extends AppCompatActivity
                             Log.e("aaa","bbb"+order.getAttribute("客户单号"));
                             Intent intent = new Intent(InsertActivity.this,detailActivity.class);
                             String Sorder = order.toJson();
+                            intent.putExtra("ID",ID);
+                            intent.putExtra("MAC",MAC);
                             intent.putExtra("order",Sorder);
                             startActivity(intent);
                         }
@@ -162,8 +162,10 @@ public class InsertActivity extends AppCompatActivity
                     }
 
                 } else if (id == R.id.export) {
+                    exportFile();
 
-                }  else if (id == R.id.print) {
+                }
+                else if (id == R.id.print) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
                         Toast.makeText(InsertActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
@@ -182,7 +184,7 @@ public class InsertActivity extends AppCompatActivity
                     if (mBluetoothAdapter != null) {
                         mBluetoothAdapter.startDiscovery();
                     }
-                    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+                    mReceiver = new BroadcastReceiver() {
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
                             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
@@ -199,7 +201,7 @@ public class InsertActivity extends AppCompatActivity
                     BluetoothDevice useDevice = null;
                     if ((pairedDevices != null ? pairedDevices.size() : 0) > 0) {
                         for (BluetoothDevice device : pairedDevices) {
-                            if (device.getAddress().equals("00:0C:B6:02:EB:CF")) {
+                            if (device.getAddress().equals(MAC)) {
                                 useDevice = device;
                             }
                         }
@@ -224,7 +226,6 @@ public class InsertActivity extends AppCompatActivity
         TextView TextForId = (TextView) header.findViewById(R.id.TextForID);
         TextForId.setText("" + ID);
         mss.get("staffnum").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 
@@ -389,7 +390,7 @@ public class InsertActivity extends AppCompatActivity
         for(int i=9;i<=13;i++) {
             mse.get(edit[i]).setText("0");
         }
-
+        OrderList = getFile();
     }
 
     private void save() throws NullValueException {
@@ -416,6 +417,13 @@ public class InsertActivity extends AppCompatActivity
                 super.onBackPressed();
             }
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(mReceiver);
+        addFile(neworder);
     }
 
     @Override
@@ -473,20 +481,30 @@ public class InsertActivity extends AppCompatActivity
         mse.get("totnumber").setText(""+order.getTotalNumber());
         mse.get("totpay").setText(""+order.getTotalFee());
         mse.get("tottranpay").setText(""+order.getFee("总运费"));
+        neworder.add(order);
+        OrderList.add(order);
         return order;
     }
     private void exportFile(){
-        String data="" ;
-        for(Order order :OrderList){
-         //   data+=order.toJson();
-        }
             FileWriter fileWriter = null;
             try {
-                fileWriter = new FileWriter("/sdcard/" + new Date().getDay() + "日报表");
+                String SDPATH = Environment.getExternalStorageDirectory().getPath();
+                String fileName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ "日报表.txt";
+                Log.d("export",SDPATH+File.separator+ fileName);
+                File file = new File(SDPATH + File.separator + fileName);
+                if (!file.exists()) {
+                    file.createNewFile();
+                }
+                fileWriter = new FileWriter(SDPATH+File.separator+fileName);
+                Log.d("export","aaa");
+                pt.expHeader(fileWriter);
+              //  pt.exp(OrderList,fileWriter);
+
             } catch (IOException e) {
+
                 e.printStackTrace();
             }
-            pt.exp(OrderList, fileWriter);
+       //     pt.exp(OrderList, fileWriter);
             try {
                 assert fileWriter != null;
                 fileWriter.close();
@@ -495,47 +513,28 @@ public class InsertActivity extends AppCompatActivity
             }
 
     }
-    private List<Order> getFile(){
-        List<Order> morders = new ArrayList<>();
-        FileInputStream in = null;
-        BufferedReader reader = null;
-        StringBuilder content = new StringBuilder();
+    private ArrayList<Order> getFile(){
+        FileReader fileReader = null;
         try {
-            in = openFileInput("data");
+            fileReader = new FileReader("data");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        reader = new BufferedReader(new InputStreamReader((in)));
-        String line = "";
-        try {
-            while((line=reader.readLine())!=null){
-                content.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            if(reader!=null) try {
-                reader.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return morders;
+        Stream<Order> stream= pt.fetchOrder(fileReader);
+        ArrayList<Order> list = new ArrayList<Order>();
+        stream.foreach(list::add);
+        return list;
     }
-    private void addFile(Order order){
-        String data = null;
+    private void addFile(List<Order> order){
         try {
-            FileWriter fileWriter = new FileWriter("data");
+            FileWriter fileWriter = new FileWriter("data",true);
+            pt.saveOrder(order,fileWriter);
+            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-
-
-
-
 
     class ConnectThread extends Thread {
         public final BluetoothSocket mmSocket;
@@ -561,7 +560,6 @@ public class InsertActivity extends AppCompatActivity
         public void run() {
             try {
                 mmSocket.connect();
-                String text = mse.get("danhao").getText().toString();
                 Log.e("mmconnect", "" + mmSocket.isConnected());
                 if (mmSocket.isConnected()) {
                     try {
@@ -569,6 +567,10 @@ public class InsertActivity extends AppCompatActivity
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
+                        for(Staff stf :staff){
+                            PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
+
+                        }
                         outputStream.close();
                     } catch (Exception e) {
                         e.printStackTrace();
