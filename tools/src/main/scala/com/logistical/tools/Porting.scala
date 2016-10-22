@@ -1,6 +1,7 @@
 package com.logistical.tools
 
 import java.io.{BufferedReader, Reader, Writer}
+import java.util.{List ⇒ JList}
 
 import com.google.gson.Gson
 import com.logistical.model._
@@ -34,7 +35,7 @@ class Porting(errorHandler: ErrorHandler) {
    * @param from 现有的Order的List
    * @param to   要将所有的Order导出到哪里
    */
-  def exp(from: java.util.List[Order], to: Writer) =
+  def exp(from: java.util.List[Order], to: Writer): Unit =
   from.asScala.map(orderLine).foreach(to.append)
 
   /**
@@ -43,18 +44,18 @@ class Porting(errorHandler: ErrorHandler) {
    * @param to
    * @return
    */
-  def expHeader(to: Writer) = to.append(header)
+  def expHeader(to: Writer): Unit = to.append(header)
 
-  def fetchOrder(from: Reader) = {
+  def fetchOrder(from: Reader): JList[Order] = {
     val r = new BufferedReader(from)
     Stream.continually(r.readLine).flatMap(l ⇒ Try(Order.fromJson(l)) match {
       case Success(order) ⇒ Some(order)
       case Failure(_) ⇒ errorHandler.onError(s"导入json$l 时失败"); None
-    })
+    }).toList.asJava
   }
 
 
-  def saveOrder(from: java.util.List[Order], to: Writer) =
+  def saveOrder(from: java.util.List[Order], to: Writer): Unit =
     from.asScala.flatMap(o ⇒ Try(o.toJson) match {
       case Success(j) ⇒ Some(j)
       case Failure(_) ⇒ errorHandler.onError(s"导出订单${o.bar}时失败"); None
