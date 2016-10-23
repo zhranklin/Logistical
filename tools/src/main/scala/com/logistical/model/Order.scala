@@ -39,6 +39,9 @@ object Order {
  */
 @SerialVersionUID(-7060210544600464481L)
 class Order(attributes: JMap[String, String], fees: JMap[String, Integer], var staff: JList[Staff], var bar: String) extends Serializable {
+
+  bar = bar.toUpperCase
+
   /**
    * 获取订单的某个属性的值
    *
