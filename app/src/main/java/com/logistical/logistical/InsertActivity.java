@@ -32,12 +32,17 @@ import com.logistical.model.Order;
 import com.logistical.model.Staff;
 import com.logistical.tools.Porting;
 import com.logistical.tools.PrintWork;
+
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,7 +52,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import scala.collection.immutable.Stream;
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
@@ -72,7 +76,8 @@ public class InsertActivity extends AppCompatActivity
     private ListView listview;
     private Staff staff[] = new Staff[100];
     private View insert_layout, query_layout;
-    private ArrayList<Order> OrderList,neworder;
+    private ArrayList<Order> OrderList=new ArrayList<Order>();
+    private ArrayList<Order> neworder = new ArrayList<Order>();
     private String MAC;
     private EditText py1,py2;
     private Order order;
@@ -115,7 +120,7 @@ public class InsertActivity extends AppCompatActivity
                     insert_layout.setVisibility(View.GONE);
                     query_layout.setVisibility(View.VISIBLE);
                     listview = (ListView) findViewById(R.id.list_view);
-                    IdentityHashMap<String, String> att = new IdentityHashMap<String, String>();
+                   /* IdentityHashMap<String, String> att = new IdentityHashMap<String, String>();
                     IdentityHashMap<String, Integer> fee = new IdentityHashMap<String, Integer>();
                     ArrayList stf = new ArrayList();
                     stf.add(new Staff("大","小",1,2));
@@ -126,6 +131,10 @@ public class InsertActivity extends AppCompatActivity
                     OrderList.add( new Order(att,fee,stf, "bar"));
                     OrderList.add( new Order(att,fee,stf, "bar"));
                     OrderList.add( new Order(att,fee,stf, "bar"));
+                    */
+                    for(Order od:OrderList){
+                        Log.d("list",od.toJson());
+                    }
                     listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item,OrderList);
                     listview.setAdapter(listviewadapter);
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -166,6 +175,7 @@ public class InsertActivity extends AppCompatActivity
 
                 }
                 else if (id == R.id.print) {
+
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
                         Toast.makeText(InsertActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
@@ -208,10 +218,13 @@ public class InsertActivity extends AppCompatActivity
                     }
                     if (useDevice != null) {
                         Toast.makeText(InsertActivity.this, useDevice.getAddress(), Toast.LENGTH_LONG).show();
+                        ConnectThread cnt = new ConnectThread(useDevice, null);
+                        Toast.makeText(InsertActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
+                        cnt.start();
                     }
-                    ConnectThread cnt = new ConnectThread(useDevice, null);
-                    Toast.makeText(InsertActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
-                    cnt.start();
+                    else {
+                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_LONG).show();
+                    }
                 }
 
                 item.setCheckable(true);
@@ -296,7 +309,7 @@ public class InsertActivity extends AppCompatActivity
                 } catch (NotNumberException e2) {
                     Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_LONG).show();
                 }
-              //  addFile(order);
+
             }
         });
         Log.d("test","Fstation"+(mss.get("Fstation")));
@@ -390,7 +403,7 @@ public class InsertActivity extends AppCompatActivity
         for(int i=9;i<=13;i++) {
             mse.get(edit[i]).setText("0");
         }
-        OrderList = getFile();
+         getFile(OrderList);
     }
 
     private void save() throws NullValueException {
@@ -422,8 +435,15 @@ public class InsertActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(mReceiver);
-        addFile(neworder);
+        try {
+            unregisterReceiver(mReceiver);
+            Log.d("addfile","out");
+        }catch(Exception e){
+            Log.d("stop","not register");
+        }
+        finally {
+            addFile(OrderList);
+        }
     }
 
     @Override
@@ -483,6 +503,7 @@ public class InsertActivity extends AppCompatActivity
         mse.get("tottranpay").setText(""+order.getFee("总运费"));
         neworder.add(order);
         OrderList.add(order);
+        Log.e("Orderlist",""+OrderList.size());
         return order;
     }
     private void exportFile(){
@@ -513,26 +534,54 @@ public class InsertActivity extends AppCompatActivity
             }
 
     }
-    private ArrayList<Order> getFile(){
+    private void getFile(ArrayList<Order> list){
         FileReader fileReader = null;
         try {
+            File file = new File("data1");
+            if (!file.exists()) {
+                file.createNewFile();
+                Log.d("creatfile",""+file.exists());
+            }
             fileReader = new FileReader("data");
+            Log.d("filereader",""+(fileReader==null));
+            pt.fetchOrder(fileReader);
+            fileReader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
-        Stream<Order> stream= pt.fetchOrder(fileReader);
-        ArrayList<Order> list = new ArrayList<Order>();
-        stream.foreach(list::add);
-        return list;
-    }
-    private void addFile(List<Order> order){
-        try {
-            FileWriter fileWriter = new FileWriter("data",true);
-            pt.saveOrder(order,fileWriter);
-            fileWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    private void savef (List<Order> input){
+        FileOutputStream out=null;
+        BufferedWriter writer = null;
+        try {
+            out = openFileOutput("data1",Context.MODE_PRIVATE);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        StringWriter sw = new StringWriter();
+        pt.saveOrder(input, sw);
+        String json = sw.toString();
+        writer = new BufferedWriter(new OutputStreamWriter(out));
+
+        try {
+            writer.write("aaaaaaaaaaa");
+           // writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void addFile(List<Order> order){
+        /*     FileWriter fileWriter = new FileWriter("data",true);
+              pt.saveOrder(order,fileWriter);
+              fileWriter.close();*/
+        savef(order);
 
     }
 
@@ -547,7 +596,8 @@ public class InsertActivity extends AppCompatActivity
             mmDevice = device;
 
             try {
-                // 通过 BluetoothDevice 获得 BluetoothSocket 对象
+                // 通过 Bluetooth
+                // Device 获得 BluetoothSocket 对象
                 tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -567,9 +617,9 @@ public class InsertActivity extends AppCompatActivity
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
-                        for(Staff stf :staff){
-                            PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
-
+                        for(int i=1;i<=totindex;i++){
+                            Log.d("printwork",staff[i].toString());
+                            PrintWork.builder().printStaff(order,staff[i],Integer.parseInt(ID)).build(outputStream).run();
                         }
                         outputStream.close();
                     } catch (Exception e) {

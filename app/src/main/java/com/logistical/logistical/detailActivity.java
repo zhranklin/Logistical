@@ -58,7 +58,7 @@ public class detailActivity extends AppCompatActivity {
     private final int REQUEST_ENABLE_BT = 1;
     private BluetoothDevice useDevice;
     private Spinner staffSpinner;
-    private ArrayList<String> adaptString;
+    private ArrayList<String> adaptString=new ArrayList<String>();
     private ArrayAdapter<String> StaffAdapter;
     @Override
     protected void onStop() {
