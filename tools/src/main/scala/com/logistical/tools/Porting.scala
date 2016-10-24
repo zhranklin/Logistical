@@ -3,7 +3,6 @@ package com.logistical.tools
 import java.io.{BufferedReader, Reader, Writer}
 import java.util.{List ⇒ JList}
 
-import com.google.gson.Gson
 import com.logistical.model._
 
 import scala.collection.JavaConverters._
@@ -15,8 +14,6 @@ import scala.util._
  * 构造器接受一个[[ErrorHandler]]作为参数, 所有的出错信息由它处理
  */
 class Porting(errorHandler: ErrorHandler) {
-  private val gson = new Gson
-
   private def header = List(
     List("序列号", "总费", "总数量", "商品类型"),
     Order.ATTRIBUTE_NAMES.asScala,
@@ -41,7 +38,7 @@ class Porting(errorHandler: ErrorHandler) {
   /**
    * 输出开头行
    *
-   * @param to
+   * @param to 接受输出的writer
    * @return
    */
   def expHeader(to: Writer): Unit = to.append(header)
@@ -59,6 +56,6 @@ class Porting(errorHandler: ErrorHandler) {
     from.asScala.flatMap(o ⇒ Try(o.toJson) match {
       case Success(j) ⇒ Some(j)
       case Failure(_) ⇒ errorHandler.onError(s"导出订单${o.bar}时失败"); None
-    })
+    }).foreach(to.append)
 
 }

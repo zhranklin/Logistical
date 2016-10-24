@@ -20,38 +20,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.logistical.model.Order;
 import com.logistical.model.Staff;
+import com.logistical.tools.ErrorHandler;
 import com.logistical.tools.Porting;
 import com.logistical.tools.PrintWork;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
@@ -81,7 +59,12 @@ public class InsertActivity extends AppCompatActivity
     private String MAC;
     private EditText py1,py2;
     private Order order;
-    Porting pt = new Porting(null);
+    Porting pt = new Porting(new ErrorHandler() {
+        @Override
+        public void onError(String msg) {
+            Log.e("porting", msg);
+        }
+    });
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -432,6 +415,9 @@ public class InsertActivity extends AppCompatActivity
         }
     }
 
+    /*
+    TODO: 把保存的过程都inline了, 可以从日志里查看是否写成功
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -442,7 +428,20 @@ public class InsertActivity extends AppCompatActivity
             Log.d("stop","not register");
         }
         finally {
-            addFile(OrderList);
+            try {
+                FileOutputStream fos = openFileOutput("message.txt", MODE_PRIVATE);
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                pt.saveOrder(OrderList, writer);
+                writer.close();
+
+                //TODO: 如果保存成功就能读取到数据, 以后需要删掉这些代码
+                FileInputStream fis = openFileInput("message.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+                Log.e("reader", reader.readLine() + "aaa");
+                reader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -551,38 +550,6 @@ public class InsertActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    private void savef (List<Order> input){
-        FileOutputStream out=null;
-        BufferedWriter writer = null;
-        try {
-            out = openFileOutput("data1",Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        StringWriter sw = new StringWriter();
-        pt.saveOrder(input, sw);
-        String json = sw.toString();
-        writer = new BufferedWriter(new OutputStreamWriter(out));
-
-        try {
-            writer.write("aaaaaaaaaaa");
-           // writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private void addFile(List<Order> order){
-        /*     FileWriter fileWriter = new FileWriter("data",true);
-              pt.saveOrder(order,fileWriter);
-              fileWriter.close();*/
-        savef(order);
-
     }
 
     class ConnectThread extends Thread {
