@@ -564,10 +564,10 @@ public class InsertActivity extends AppCompatActivity
         pt.saveOrder(input, sw);
         String json = sw.toString();
         writer = new BufferedWriter(new OutputStreamWriter(out));
-
+        Log.d("json",json);
         try {
             writer.write("aaaaaaaaaaa");
-           // writer.write(json);
+             //writer.write(json);
         } catch (IOException e) {
             e.printStackTrace();
         }

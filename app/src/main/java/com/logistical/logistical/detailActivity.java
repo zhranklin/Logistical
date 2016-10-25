@@ -114,7 +114,7 @@ public class detailActivity extends AppCompatActivity {
         staffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int tmp = Integer.parseInt(parent.getSelectedItem().toString());
+                int tmp = Integer.parseInt(parent.getSelectedItem().toString())-1;
                 mse.get("category1_detail").setText(staff.get(tmp).getType());
                 mse.get("category2_detail").setText(staff.get(tmp).getSubType());
                 mse.get("uniprice_detail").setText(staff.get(tmp).getPrice());
