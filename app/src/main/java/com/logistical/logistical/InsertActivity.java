@@ -557,10 +557,10 @@ public class InsertActivity extends AppCompatActivity
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
         try {
-            Log.d("reader","asda"+reader.readLine());
+//            Log.d("reader","asda"+reader.readLine());
             list=pt.fetchOrder(reader);
             Log.d("reader",list.toString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.d("reader","1");
             e.printStackTrace();
         }
