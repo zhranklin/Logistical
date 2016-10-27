@@ -34,6 +34,7 @@ public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
     HashMap<String, Spinner> mss = new HashMap<String, Spinner>();
+    //private int staffSelected = 1;
     private ArrayList<String> StaffString = new ArrayList<>();
     private ArrayAdapter<String> StaffAdapter;
     private ListViewAdapter listviewadapter;
@@ -65,10 +66,7 @@ public class InsertActivity extends AppCompatActivity
             Log.e("porting", msg);
         }
     });
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,23 +101,11 @@ public class InsertActivity extends AppCompatActivity
                     insert_layout.setVisibility(View.GONE);
                     query_layout.setVisibility(View.VISIBLE);
                     listview = (ListView) findViewById(R.id.list_view);
-                   /* IdentityHashMap<String, String> att = new IdentityHashMap<String, String>();
-                    IdentityHashMap<String, Integer> fee = new IdentityHashMap<String, Integer>();
-                    ArrayList stf = new ArrayList();
-                    stf.add(new Staff("大","小",1,2));
-                    for(int i=0;i<ATTR.length;i++) att.put(ATTR[i],""+i);
-                    for(int i=0;i<FEE.length;i++) fee.put(FEE[i],i);
-                    OrderList = new ArrayList<Order>();
-                    OrderList.add(new Order(att,fee, stf, "bar"));
-                    OrderList.add( new Order(att,fee,stf, "bar"));
-                    OrderList.add( new Order(att,fee,stf, "bar"));
-                    OrderList.add( new Order(att,fee,stf, "bar"));
-                    */
                     for(Order od:OrderList){
                         Log.d("list",od.toJson());
                     }
                     if (OrderList.size()==0){
-                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_SHORT).show();
                         query_layout.setVisibility(View.GONE);
                         insert_layout.setVisibility(View.VISIBLE);
                     }
@@ -147,8 +133,9 @@ public class InsertActivity extends AppCompatActivity
                     query_layout.setVisibility(View.GONE);
                     staff = new Staff[100];
                     totindex = 1;
-                    for (String anEdit : edit) {
-                        mse.get(anEdit).setText("");
+                    for (int i=0;i<edit.length;i++) {
+                        if(i<=13&&i>=9)   mse.get(edit[i]).setText("0");
+                        else mse.get(edit[i]).setText("");
                     }
                     staff[1] = new Staff();
                     StaffString = new ArrayList<String>();
@@ -162,16 +149,20 @@ public class InsertActivity extends AppCompatActivity
                     }
 
                 } else if (id == R.id.export) {
-                    exportFile();
+                    try {
+                        exportFile();
+                    } catch (Exception e) {
+                        Toast.makeText(InsertActivity.this,"保存错误,请检查权限问题",Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if (id == R.id.print) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
-                        Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
 
                     }
                     if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(InsertActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent, REQUEST_ENABLE_BT);
                         mBluetoothAdapter.startDiscovery();
@@ -210,7 +201,7 @@ public class InsertActivity extends AppCompatActivity
                         cnt.start();
                     }
                     else {
-                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -261,7 +252,7 @@ public class InsertActivity extends AppCompatActivity
                 try {
                     save();
                 } catch (NullValueException e1) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 StaffString.add("" + (++totindex));
@@ -272,7 +263,7 @@ public class InsertActivity extends AppCompatActivity
                 mss.get("category2").setSelection(0);
                 mse.get("uniprice").setText("");
                 mse.get("number").setText("");
-                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_LONG).show();
+                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_SHORT).show();
             }
         });
         saveStaff.setOnClickListener(new View.OnClickListener() {
@@ -280,9 +271,9 @@ public class InsertActivity extends AppCompatActivity
             public void onClick(View v) {
                 try {
                     save();
-                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
                 } catch (NullValueException e) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -293,11 +284,11 @@ public class InsertActivity extends AppCompatActivity
                 Order order=null;
                 try {
                   order= makeOrder();
-                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this,"保存成功当前单号:"+Order.getBarcode(""+py1.getText()+py2.getText(),new Date(),Integer.parseInt(ID)),Toast.LENGTH_LONG).show();
                 } catch (NullValueException e1) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                 } catch (NotNumberException e2) {
-                    Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -359,8 +350,6 @@ public class InsertActivity extends AppCompatActivity
             }
 
         });
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
     }
 
     private void init() throws NoSuchFieldException, IllegalAccessException {
@@ -393,7 +382,7 @@ public class InsertActivity extends AppCompatActivity
         for(int i=9;i<=13;i++) {
             mse.get(edit[i]).setText("0");
         }
-        getFile(OrderList);
+        getFile();
         Log.d("filereader",OrderList.toString());
     }
 
@@ -439,6 +428,8 @@ public class InsertActivity extends AppCompatActivity
             try {
                 FileOutputStream fos = openFileOutput("message.txt", MODE_PRIVATE);
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                Log.d("save",""+OrderList.size());
+
                 pt.saveOrder(OrderList, writer);
                 writer.close();
             } catch (Exception e) {
@@ -489,6 +480,7 @@ public class InsertActivity extends AppCompatActivity
         for (int i = 0; i <= 6; i++) {
             attributes.put(ATTR[i], mse.get(edit[i]).getText().toString());
         }
+        attributes.put("返款方", mss.get("fankuanfang").getSelectedItem().toString());
         attributes.put("付款方式", mss.get("payway").getSelectedItem().toString());
         attributes.put("返款方式1", mss.get("Ffankuan").getSelectedItem().toString());
         attributes.put("返款方式2", mss.get("Tfankuan").getSelectedItem().toString());
@@ -507,10 +499,10 @@ public class InsertActivity extends AppCompatActivity
         Log.e("Orderlist",""+OrderList.size());
         return order;
     }
-    private void exportFile(){
+    private void exportFile() throws Exception{
             FileWriter fileWriter = null;
             try {
-                String SDPATH = Environment.getExternalStorageDirectory().getPath();
+                String SDPATH =  Environment.getExternalStorageDirectory().toString();
                 String fileName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ "日报表.txt";
                 Log.d("export",SDPATH+File.separator+ fileName);
                 File file = new File(SDPATH + File.separator + fileName);
@@ -523,7 +515,6 @@ public class InsertActivity extends AppCompatActivity
               //  pt.exp(OrderList,fileWriter);
 
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
             pt.exp(OrderList, fileWriter);
@@ -535,7 +526,7 @@ public class InsertActivity extends AppCompatActivity
             }
 
     }
-    private void getFile(List<Order> list){
+    private void getFile(){
         FileInputStream fis = null;
         try {
             File file = new File(getFilesDir()+"/message.txt");
@@ -556,14 +547,9 @@ public class InsertActivity extends AppCompatActivity
             e.printStackTrace();
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-        try {
-//            Log.d("reader","asda"+reader.readLine());
-            list=pt.fetchOrder(reader);
-            Log.d("reader",list.toString());
-        } catch (Exception e) {
-            Log.d("reader","1");
-            e.printStackTrace();
-        }
+        //Log.d("reader","asda"+reader.readLine());
+        OrderList.addAll(pt.fetchOrder(reader));
+        Log.d("reader",list.toString());
         try {
             reader.close();
         } catch (IOException e) {
@@ -624,9 +610,12 @@ public class InsertActivity extends AppCompatActivity
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
+                        int tmp = 1;
                         for(int i=1;i<=totindex;i++){
                             Log.d("printwork",staff[i].toString());
-                            PrintWork.builder().printStaff(order,staff[i],Integer.parseInt(ID)).build(outputStream).run();
+                            int id = staff[i].getNumber();
+                            for(int j=1;j<=id;j++)
+                                PrintWork.builder().printStaff(order,staff[i],tmp++).build(outputStream).run();
                         }
                         outputStream.close();
                     } catch (Exception e) {

@@ -80,11 +80,6 @@ public class detailActivity extends AppCompatActivity {
         ID = intent.getStringExtra("ID");
         order = Order.fromJson(Sorder);
         staff = order.staff();
-        Log.e("aaa","aaa"+staff.get(0).type());
-        Log.e("aaa","aaa"+staff.get(0).subType());
-        Log.e("aaa","aaa"+staff.get(0).getNumber());
-        Log.e("aaa","aaa"+staff.get(0).price());
-
         for (String anEdit : edit) {
             Field r = null;
             try {
@@ -101,8 +96,7 @@ public class detailActivity extends AppCompatActivity {
         }
 
         for(int i=0;i<edit.length;i++) {
-            mse.get(edit[i]).setFocusable(false);
-          //  Log.d("detail",Chinese[i]);
+           if(!edit[i].equals("number_detail")) mse.get(edit[i]).setFocusable(false);
             if(i<=10){
                 mse.get(edit[i]).setText(order.getAttribute(Chinese[i]));
             }
@@ -110,11 +104,8 @@ public class detailActivity extends AppCompatActivity {
                 mse.get(edit[i]).setText(""+order.getFee(Chinese[i]));
             }
         }
-        Log.d("detail","1");
         mse.get("tottranpay_detail").setText(""+order.getFee("总运费"));
-        Log.d("detail","2");
         mse.get("totpay_detail").setText(""+order.getTotalFee());
-        Log.d("detail","3");
         mse.get("totnumber_detail").setText(""+order.getTotalNumber());
         print_all = (Button) findViewById(R.id.print_all);
         print_part = (Button) findViewById(R.id.print_part);
@@ -145,10 +136,10 @@ public class detailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
-                    Toast.makeText(detailActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "Device not support Bluetooth", Toast.LENGTH_SHORT).show();
                 }
                 if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();
@@ -182,7 +173,10 @@ public class detailActivity extends AppCompatActivity {
                     }
                 }
                 ConnectThreadOrder cnt = new ConnectThreadOrder(useDevice, null);
-                cnt.start();
+                if (useDevice!=null)cnt.start();
+                else {
+                    Toast.makeText(detailActivity.this,"请先完成配对",Toast.LENGTH_SHORT).show();
+                }
             }
         });
         print_part.setOnClickListener(new View.OnClickListener(){
@@ -190,10 +184,10 @@ public class detailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
-                    Toast.makeText(detailActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
                 }
                 if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();
@@ -226,7 +220,6 @@ public class detailActivity extends AppCompatActivity {
                         }
                     }
                 }
-
                 ConnectThreadStaff cnt = new ConnectThreadStaff(useDevice, null);
                 cnt.start();
             }
@@ -246,7 +239,6 @@ public class detailActivity extends AppCompatActivity {
             mmDevice = device;
 
             try {
-                // 通过 BluetoothDevice 获得 BluetoothSocket 对象
                 tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -314,9 +306,11 @@ public class detailActivity extends AppCompatActivity {
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                        for(Staff stf :staff){
-                            PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
-                        }
+                        int num = Integer.parseInt(staffSpinner.getSelectedItem().toString())-1;
+                        int tmp = 0;
+                        for (int i=1;i<num;i++) tmp+=staff.get(i).getNumber();
+                        Log.d("tmp","tmp:"+tmp+"detail:"+(tmp+Integer.parseInt(mse.get("number_detail").getText().toString())));
+                        PrintWork.builder().printStaff(order,staff.get(num),tmp+Integer.parseInt(mse.get("number_detail").getText().toString())).build(outputStream).run();
                         outputStream.close();
                     } catch (Exception e) {
                         e.printStackTrace();
