@@ -40,9 +40,9 @@ public class detailActivity extends AppCompatActivity {
     private static final String edit[] = new String[]{"Fstation_detail", "Tstation_detail", "danhao_detail",
             "Fname_detail", "Ftel_detail", "Tname_detail", "Ttel_detail", "payway_detail", "fankuanfang_detail", "Ffankuan_detail", "Tfankuan_detail",
             "daishou_detail", "fankuan_detail", "baojia_detail", "jiehuo_detail", "songyun_detail", "tottranpay_detail",
-            "totnumber_detail", "totpay_detail",};
+            "totnumber_detail", "totpay_detail", "category1_detail", "category2_detail", "number_detail", "uniprice_detail"};
 
-    private static final String staffedit[]={"staffnum_detail", "category1_detail", "category2_detail", "number_detail", "uniprice_detail" };
+    //private static final String staffedit[]={"staffnum_detail", "category1_detail", "category2_detail", "number_detail", "uniprice_detail" };
 
     private final String[] Chinese = {"发站", "到站", "客户单号",
             "发货人", "发货人电话", "收货人", "收货人电话", "付款方式", "返款方", "返款方式1", "返款方式2",
@@ -63,7 +63,11 @@ public class detailActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        unregisterReceiver(mReceiver);
+        try {
+            unregisterReceiver(mReceiver);
+        }catch(Exception e){
+            Log.d("stop","not register");
+        }
     }
 
     @Override
@@ -76,7 +80,10 @@ public class detailActivity extends AppCompatActivity {
         ID = intent.getStringExtra("ID");
         order = Order.fromJson(Sorder);
         staff = order.staff();
-        Log.e("aaa","aaa"+order.getAttribute("客户单号"));
+        Log.e("aaa","aaa"+staff.get(0).type());
+        Log.e("aaa","aaa"+staff.get(0).subType());
+        Log.e("aaa","aaa"+staff.get(0).getNumber());
+        Log.e("aaa","aaa"+staff.get(0).price());
 
         for (String anEdit : edit) {
             Field r = null;
@@ -92,8 +99,10 @@ public class detailActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
         for(int i=0;i<edit.length;i++) {
             mse.get(edit[i]).setFocusable(false);
+          //  Log.d("detail",Chinese[i]);
             if(i<=10){
                 mse.get(edit[i]).setText(order.getAttribute(Chinese[i]));
             }
@@ -101,8 +110,11 @@ public class detailActivity extends AppCompatActivity {
                 mse.get(edit[i]).setText(""+order.getFee(Chinese[i]));
             }
         }
+        Log.d("detail","1");
         mse.get("tottranpay_detail").setText(""+order.getFee("总运费"));
+        Log.d("detail","2");
         mse.get("totpay_detail").setText(""+order.getTotalFee());
+        Log.d("detail","3");
         mse.get("totnumber_detail").setText(""+order.getTotalNumber());
         print_all = (Button) findViewById(R.id.print_all);
         print_part = (Button) findViewById(R.id.print_part);
@@ -115,10 +127,11 @@ public class detailActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int tmp = Integer.parseInt(parent.getSelectedItem().toString())-1;
-                mse.get("category1_detail").setText(staff.get(tmp).getType());
-                mse.get("category2_detail").setText(staff.get(tmp).getSubType());
-                mse.get("uniprice_detail").setText(staff.get(tmp).getPrice());
-                mse.get("number_detail").setText(staff.get(tmp).getNumber());
+                Log.d("tmp",""+tmp);
+                mse.get("category1_detail").setText(""+staff.get(tmp).getType());
+                mse.get("category2_detail").setText(""+staff.get(tmp).getSubType());
+                mse.get("uniprice_detail").setText(""+staff.get(tmp).getPrice());
+                mse.get("number_detail").setText(""+staff.get(tmp).getNumber());
             }
 
             @Override
@@ -140,7 +153,6 @@ public class detailActivity extends AppCompatActivity {
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();
                     intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    //设置可被发现的时间，300s
                     intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
                     startActivity(intent);
                 }
@@ -169,11 +181,7 @@ public class detailActivity extends AppCompatActivity {
                         }
                     }
                 }
-                if (useDevice != null) {
-                    Toast.makeText(detailActivity.this, useDevice.getAddress(), Toast.LENGTH_LONG).show();
-                }
                 ConnectThreadOrder cnt = new ConnectThreadOrder(useDevice, null);
-                Toast.makeText(detailActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
                 cnt.start();
             }
         });
@@ -182,8 +190,7 @@ public class detailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
-                    Toast.makeText(detailActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(detailActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
                 }
                 if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
                     Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
@@ -191,7 +198,6 @@ public class detailActivity extends AppCompatActivity {
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();
                     intent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-                    //设置可被发现的时间，300s
                     intent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
                     startActivity(intent);
                 }
@@ -220,11 +226,8 @@ public class detailActivity extends AppCompatActivity {
                         }
                     }
                 }
-                if (useDevice != null) {
-                    Toast.makeText(detailActivity.this, useDevice.getAddress(), Toast.LENGTH_LONG).show();
-                }
+
                 ConnectThreadStaff cnt = new ConnectThreadStaff(useDevice, null);
-                Toast.makeText(detailActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
                 cnt.start();
             }
 
@@ -255,7 +258,7 @@ public class detailActivity extends AppCompatActivity {
         public void run() {
             try {
                 mmSocket.connect();
-                String text = mse.get("danhao").getText().toString();
+                String text = mse.get("danhao_detail").getText().toString();
                 Log.e("mmconnect", "" + mmSocket.isConnected());
                 if (mmSocket.isConnected()) {
                     try {
@@ -263,9 +266,6 @@ public class detailActivity extends AppCompatActivity {
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
-                        for(Staff stf :staff){
-                            PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
-                        }
                         outputStream.close();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -307,14 +307,13 @@ public class detailActivity extends AppCompatActivity {
         public void run() {
             try {
                 mmSocket.connect();
-                String text = mse.get("danhao").getText().toString();
+                String text = mse.get("danhao_detail").getText().toString();
                 Log.e("mmconnect", "" + mmSocket.isConnected());
                 if (mmSocket.isConnected()) {
                     try {
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                        PrintWork.builder().printOrder(order).build(outputStream).run();
                         for(Staff stf :staff){
                             PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
                         }

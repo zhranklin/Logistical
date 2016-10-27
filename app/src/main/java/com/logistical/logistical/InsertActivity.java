@@ -20,38 +20,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import com.logistical.model.Order;
 import com.logistical.model.Staff;
+import com.logistical.tools.ErrorHandler;
 import com.logistical.tools.Porting;
 import com.logistical.tools.PrintWork;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
@@ -81,7 +59,12 @@ public class InsertActivity extends AppCompatActivity
     private String MAC;
     private EditText py1,py2;
     private Order order;
-    Porting pt = new Porting(null);
+    Porting pt = new Porting(new ErrorHandler() {
+        @Override
+        public void onError(String msg) {
+            Log.e("porting", msg);
+        }
+    });
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -135,21 +118,29 @@ public class InsertActivity extends AppCompatActivity
                     for(Order od:OrderList){
                         Log.d("list",od.toJson());
                     }
-                    listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item,OrderList);
-                    listview.setAdapter(listviewadapter);
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {;
-                            Order order = OrderList.get(position);
-                            Log.e("aaa","bbb"+order.getAttribute("客户单号"));
-                            Intent intent = new Intent(InsertActivity.this,detailActivity.class);
-                            String Sorder = order.toJson();
-                            intent.putExtra("ID",ID);
-                            intent.putExtra("MAC",MAC);
-                            intent.putExtra("order",Sorder);
-                            startActivity(intent);
-                        }
-                    });
+                    if (OrderList.size()==0){
+                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_LONG).show();
+                        query_layout.setVisibility(View.GONE);
+                        insert_layout.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item, OrderList);
+                        listview.setAdapter(listviewadapter);
+                        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                ;
+                                Order order = OrderList.get(position);
+                                Log.e("aaa", "bbb" + order.getAttribute("客户单号"));
+                                Intent intent = new Intent(InsertActivity.this, detailActivity.class);
+                                String Sorder = order.toJson();
+                                intent.putExtra("ID", ID);
+                                intent.putExtra("MAC", MAC);
+                                intent.putExtra("order", Sorder);
+                                startActivity(intent);
+                            }
+                        });
+                    }
 
                 } else if (id == R.id.insert) {
                     insert_layout.setVisibility(View.VISIBLE);
@@ -172,13 +163,11 @@ public class InsertActivity extends AppCompatActivity
 
                 } else if (id == R.id.export) {
                     exportFile();
-
                 }
                 else if (id == R.id.print) {
-
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
-                        Toast.makeText(InsertActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
 
                     }
                     if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
@@ -217,9 +206,7 @@ public class InsertActivity extends AppCompatActivity
                         }
                     }
                     if (useDevice != null) {
-                        Toast.makeText(InsertActivity.this, useDevice.getAddress(), Toast.LENGTH_LONG).show();
                         ConnectThread cnt = new ConnectThread(useDevice, null);
-                        Toast.makeText(InsertActivity.this, "cnt" + (cnt.mmSocket == null), Toast.LENGTH_LONG).show();
                         cnt.start();
                     }
                     else {
@@ -277,7 +264,6 @@ public class InsertActivity extends AppCompatActivity
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                     return;
                 }
-
                 StaffString.add("" + (++totindex));
                 staff[totindex]=new Staff();
                 // StaffAdapter.add("" + (++totindex));
@@ -286,6 +272,7 @@ public class InsertActivity extends AppCompatActivity
                 mss.get("category2").setSelection(0);
                 mse.get("uniprice").setText("");
                 mse.get("number").setText("");
+                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_LONG).show();
             }
         });
         saveStaff.setOnClickListener(new View.OnClickListener() {
@@ -293,9 +280,11 @@ public class InsertActivity extends AppCompatActivity
             public void onClick(View v) {
                 try {
                     save();
+                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_LONG).show();
                 } catch (NullValueException e) {
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                 }
+
             }
         });
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -304,6 +293,7 @@ public class InsertActivity extends AppCompatActivity
                 Order order=null;
                 try {
                   order= makeOrder();
+                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_LONG).show();
                 } catch (NullValueException e1) {
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
                 } catch (NotNumberException e2) {
@@ -403,7 +393,8 @@ public class InsertActivity extends AppCompatActivity
         for(int i=9;i<=13;i++) {
             mse.get(edit[i]).setText("0");
         }
-         getFile(OrderList);
+        getFile(OrderList);
+        Log.d("filereader",OrderList.toString());
     }
 
     private void save() throws NullValueException {
@@ -432,6 +423,9 @@ public class InsertActivity extends AppCompatActivity
         }
     }
 
+    /*
+    TODO: 把保存的过程都inline了, 可以从日志里查看是否写成功
+     */
     @Override
     protected void onStop() {
         super.onStop();
@@ -442,7 +436,14 @@ public class InsertActivity extends AppCompatActivity
             Log.d("stop","not register");
         }
         finally {
-            addFile(OrderList);
+            try {
+                FileOutputStream fos = openFileOutput("message.txt", MODE_PRIVATE);
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                pt.saveOrder(OrderList, writer);
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -525,7 +526,7 @@ public class InsertActivity extends AppCompatActivity
 
                 e.printStackTrace();
             }
-       //     pt.exp(OrderList, fileWriter);
+            pt.exp(OrderList, fileWriter);
             try {
                 assert fileWriter != null;
                 fileWriter.close();
@@ -534,40 +535,52 @@ public class InsertActivity extends AppCompatActivity
             }
 
     }
-    private void getFile(ArrayList<Order> list){
-        FileReader fileReader = null;
+    private void getFile(List<Order> list){
+        FileInputStream fis = null;
         try {
-            File file = new File("data1");
-            if (!file.exists()) {
-                file.createNewFile();
-                Log.d("creatfile",""+file.exists());
+            File file = new File(getFilesDir()+"/message.txt");
+            Log.d("reader",getFilesDir()+"/message.txt");
+            if(!file.exists()) {
+                FileOutputStream out = null;
+                BufferedWriter writer = null;
+                Log.d("reader","not");
+                out = openFileOutput("message.txt",Context.MODE_PRIVATE);
+                writer = new BufferedWriter(new OutputStreamWriter(out));
+                writer.write("");
+                writer.close();
             }
-            fileReader = new FileReader("data");
-            Log.d("filereader",""+(fileReader==null));
-            pt.fetchOrder(fileReader);
-            fileReader.close();
+            fis = openFileInput("message.txt");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+        try {
+            Log.d("reader","asda"+reader.readLine());
+            list=pt.fetchOrder(reader);
+            Log.d("reader",list.toString());
+        } catch (IOException e) {
+            Log.d("reader","1");
+            e.printStackTrace();
+        }
+        try {
+            reader.close();
+        } catch (IOException e) {
+            Log.d("reader","2");
             e.printStackTrace();
         }
     }
     private void savef (List<Order> input){
         FileOutputStream out=null;
         BufferedWriter writer = null;
-        try {
-            out = openFileOutput("data1",Context.MODE_PRIVATE);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
         StringWriter sw = new StringWriter();
         pt.saveOrder(input, sw);
         String json = sw.toString();
         writer = new BufferedWriter(new OutputStreamWriter(out));
         Log.d("json",json);
         try {
-            writer.write("aaaaaaaaaaa");
-             //writer.write(json);
+             writer.write(json);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -577,13 +590,8 @@ public class InsertActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
-    private void addFile(List<Order> order){
-        /*     FileWriter fileWriter = new FileWriter("data",true);
-              pt.saveOrder(order,fileWriter);
-              fileWriter.close();*/
-        savef(order);
 
-    }
+
 
     class ConnectThread extends Thread {
         public final BluetoothSocket mmSocket;
@@ -603,7 +611,6 @@ public class InsertActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             mmSocket = tmp;
-            Toast.makeText(InsertActivity.this, "socket:" + (mmSocket == null), Toast.LENGTH_LONG).show();
         }
 
         @Override
