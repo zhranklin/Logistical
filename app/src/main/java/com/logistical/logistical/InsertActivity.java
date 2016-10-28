@@ -134,7 +134,7 @@ public class InsertActivity extends AppCompatActivity
                     totindex = 1;
                     for (int i=0;i<edit.length;i++) {
                         if(i<=13&&i>=9)   mse.get(edit[i]).setText("0");
-                        else lse mse.get(edit[i]).setText("");
+                        else mse.get(edit[i]).setText("");
                     }
                     staff[1] = new Staff();
                     StaffString = new ArrayList<String>();
