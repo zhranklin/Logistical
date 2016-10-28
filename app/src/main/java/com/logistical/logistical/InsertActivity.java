@@ -16,6 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,11 +32,12 @@ import com.logistical.tools.PrintWork;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
+
 public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    HashMap<String, EditText> mse = new HashMap<String, EditText>();
-    HashMap<String, Spinner> mss = new HashMap<String, Spinner>();
-    //private int staffSelected = 1;
+    private HashMap<String, EditText> mse = new HashMap<>();
+    private HashMap<String, Spinner> mss = new HashMap<>();
+    private int staffSelected = 0;
     private ArrayList<String> StaffString = new ArrayList<>();
     private ArrayAdapter<String> StaffAdapter;
     private ListViewAdapter listviewadapter;
@@ -45,22 +48,21 @@ public class InsertActivity extends AppCompatActivity
     private final String[] FEE = {"代收款", "返款费", "保价费", "接货费", "送货费", "总件数", "总运费", "总价"};
     private final String[] ATTR = {"发站", "到站", "客户单号", "发货人", "发货人电话", "收货人", "收货人电话", "付款方式",
             "返款方", "返款方式1", "返款方式2"};
-    public static final String list[] = {
-            "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "fankuanfang","Ffankuan", "Tfankuan"
+    private static final String list[] = {
+            "staffnum", "payway", "category1", "category2", "Fstation", "Tstation", "fankuanfang", "Ffankuan", "Tfankuan"
     };
-    BroadcastReceiver mReceiver;
+    private BroadcastReceiver mReceiver;
     private String ID;
     private int totindex = 1;
-    private Button addStaff, saveStaff, confirm;
+    private Button addStaff, confirm;
     private ListView listview;
     private Staff staff[] = new Staff[100];
     private View insert_layout, query_layout;
-    private ArrayList<Order> OrderList=new ArrayList<Order>();
-    private ArrayList<Order> neworder = new ArrayList<Order>();
+    private ArrayList<Order> OrderList = new ArrayList<>();
     private String MAC;
-    private EditText py1,py2;
+    private EditText py1, py2;
     private Order order;
-    Porting pt = new Porting(new ErrorHandler() {
+    private Porting pt = new Porting(new ErrorHandler() {
         @Override
         public void onError(String msg) {
             Log.e("porting", msg);
@@ -83,14 +85,8 @@ public class InsertActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Log.d("test","init");
-        try {
-            init();
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchFieldException e1) {
-            e1.printStackTrace();
-        }
+        Log.d("test", "init");
+        init();
 
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -101,21 +97,19 @@ public class InsertActivity extends AppCompatActivity
                     insert_layout.setVisibility(View.GONE);
                     query_layout.setVisibility(View.VISIBLE);
                     listview = (ListView) findViewById(R.id.list_view);
-                    for(Order od:OrderList){
-                        Log.d("list",od.toJson());
+                    for (Order od : OrderList) {
+                        Log.d("list", od.toJson());
                     }
-                    if (OrderList.size()==0){
-                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_SHORT).show();
+                    if (OrderList.size() == 0) {
+                        Toast.makeText(InsertActivity.this, "当前无任何记录", Toast.LENGTH_SHORT).show();
                         query_layout.setVisibility(View.GONE);
                         insert_layout.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         listviewadapter = new ListViewAdapter(InsertActivity.this, R.layout.item, OrderList);
                         listview.setAdapter(listviewadapter);
                         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                ;
                                 Order order = OrderList.get(position);
                                 Log.e("aaa", "bbb" + order.getAttribute("客户单号"));
                                 Intent intent = new Intent(InsertActivity.this, detailActivity.class);
@@ -133,14 +127,14 @@ public class InsertActivity extends AppCompatActivity
                     query_layout.setVisibility(View.GONE);
                     staff = new Staff[100];
                     totindex = 1;
-                    for (int i=0;i<edit.length;i++) {
-                        if(i<=13&&i>=9)   mse.get(edit[i]).setText("0");
+                    for (int i = 0; i < edit.length; i++) {
+                        if (i <= 13 && i >= 9) mse.get(edit[i]).setText("0");
                         else mse.get(edit[i]).setText("");
                     }
                     staff[1] = new Staff();
-                    StaffString = new ArrayList<String>();
+                    StaffString = new ArrayList<>();
                     StaffString.add("1");
-                    StaffAdapter = new ArrayAdapter<String>(InsertActivity.this, android.R.layout.simple_spinner_item, StaffString);
+                    StaffAdapter = new ArrayAdapter<>(InsertActivity.this, android.R.layout.simple_spinner_item, StaffString);
                     StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
                     mss.get("staffnum").setAdapter(StaffAdapter);
                     for (String anList : list) {
@@ -152,10 +146,9 @@ public class InsertActivity extends AppCompatActivity
                     try {
                         exportFile();
                     } catch (Exception e) {
-                        Toast.makeText(InsertActivity.this,"保存错误,请检查权限问题",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(InsertActivity.this, "保存错误,请检查是否给予存储卡读写权限!", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else if (id == R.id.print) {
+                } else if (id == R.id.print) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
                         Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
@@ -178,7 +171,7 @@ public class InsertActivity extends AppCompatActivity
                         public void onReceive(Context context, Intent intent) {
                             String action = intent.getAction();
                             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                                intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                             }
                         }
                     };
@@ -197,11 +190,10 @@ public class InsertActivity extends AppCompatActivity
                         }
                     }
                     if (useDevice != null) {
-                        ConnectThread cnt = new ConnectThread(useDevice, null);
+                        ConnectThread cnt = new ConnectThread(useDevice);
                         cnt.start();
-                    }
-                    else {
-                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(InsertActivity.this, "请先完成配对", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -216,28 +208,29 @@ public class InsertActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         TextView TextForId = (TextView) header.findViewById(R.id.TextForID);
         TextForId.setText("" + ID);
-        mss.get("staffnum").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        mss.get("staffnum").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                
                 int tmp = Integer.parseInt(parent.getSelectedItem().toString());
-                Log.d("staff",""+tmp);
-                Log.d("staff",staff[tmp].toString());
-                if (staff[tmp].getNumber()!=0) {
-                    mse.get("number").setText(""+staff[tmp].getNumber());
-                    mse.get("uniprice").setText(""+staff[tmp].getPrice());
-                    Spinner cate1 = mss.get("category1");
-                    for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
-                        if (cate1.getAdapter().getItem(i).toString().equals(staff[tmp].getType()))
-                            cate1.setSelection(i);
-                    }
-                    Spinner cate2 = mss.get("category2");
-                    for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
-                        if (cate1.getAdapter().getItem(i).toString().equals(staff[tmp].getSubType()))
-                            cate2.setSelection(i);
-                    }
+                staffSelected = tmp;
+                Log.d("staff", "" + tmp);
+                Staff selected = InsertActivity.this.staff[tmp];
+                Log.d("staff", selected.toString());
+//                if (selected.getNumber()!=0) {
+                mse.get("number").setText("" + selected.getNumber());
+                mse.get("uniprice").setText("" + selected.getPrice());
+                Spinner cate1 = mss.get("category1");
+                for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
+                    if (cate1.getAdapter().getItem(i).toString().equals(selected.getType()))
+                        cate1.setSelection(i);
                 }
-                if(tmp<totindex) addStaff.setVisibility(View.GONE);
+                Spinner cate2 = mss.get("category2");
+                for (int i = 0; i < cate1.getAdapter().getCount(); i++) {
+                    if (cate1.getAdapter().getItem(i).toString().equals(selected.getSubType()))
+                        cate2.setSelection(i);
+                }
+//                }
+                if (tmp < totindex) addStaff.setVisibility(View.GONE);
                 else addStaff.setVisibility(View.VISIBLE);
             }
 
@@ -249,42 +242,35 @@ public class InsertActivity extends AppCompatActivity
         addStaff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    save();
-                } catch (NullValueException e1) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 StaffString.add("" + (++totindex));
-                staff[totindex]=new Staff();
+                staff[totindex] = new Staff();
                 // StaffAdapter.add("" + (++totindex));
                 mss.get("staffnum").setSelection(totindex - 1);
-                mss.get("category1").setSelection(0);
-                mss.get("category2").setSelection(0);
-                mse.get("uniprice").setText("");
-                mse.get("number").setText("");
-                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_SHORT).show();
+                Toast.makeText(InsertActivity.this, "已添加物件", Toast.LENGTH_SHORT).show();
             }
         });
-        saveStaff.setOnClickListener(new View.OnClickListener() {
+        TextWatcher twStf = new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                try {
-                    save();
-                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
-                } catch (NullValueException e) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
-                }
-
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-        });
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                save();
+            }
+        };
+        mse.get("uniprice").addTextChangedListener(twStf);
+        mse.get("number").addTextChangedListener(twStf);
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Order order=null;
                 try {
-                  order= makeOrder();
-                    Toast.makeText(InsertActivity.this,"保存成功当前单号:"+Order.getBarcode(""+py1.getText()+py2.getText(),new Date(),Integer.parseInt(ID)),Toast.LENGTH_LONG).show();
+                    makeOrder();
+                    Toast.makeText(InsertActivity.this, "创建新订单: " + Order.getBarcode("" + py1.getText() + py2.getText(), new Date(), Integer.parseInt(ID)), Toast.LENGTH_LONG).show();
                 } catch (NullValueException e1) {
                     Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                 } catch (NotNumberException e2) {
@@ -293,22 +279,19 @@ public class InsertActivity extends AppCompatActivity
 
             }
         });
-        Log.d("test","Fstation"+(mss.get("Fstation")));
-        ((Spinner)mss.get("Fstation")).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        Log.d("test", "Fstation" + (mss.get("Fstation")));
+        mss.get("Fstation").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position==2){
+                if (position == 2) {
                     findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Fstation2_T).setVisibility(View.VISIBLE);
                     py1.setText("");
                     mse.get("Fstation2").setText("");
-                }
-                else {
-                    if(position==0){
+                } else {
+                    if (position == 0) {
                         py1.setText("cd");
                         mse.get("Fstation2").setText("成都");
-
-                    }
-                    else {
+                    } else {
                         py1.setText("pzh");
                         mse.get("Fstation2").setText("攀枝花");
                     }
@@ -318,25 +301,22 @@ public class InsertActivity extends AppCompatActivity
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
 
         });
         mss.get("Tstation").setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("tstaion","in");
-                if(position==2){
+                Log.d("tstaion", "in");
+                if (position == 2) {
                     findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Tstation2_T).setVisibility(View.VISIBLE);
                     py2.setText("");
                     mse.get("Tstation2").setText("");
-                }
-                else {
-                    if(position==0){
+                } else {
+                    if (position == 0) {
                         py2.setText("cd");
                         mse.get("Tstation2").setText("成都");
-                    }
-                    else {
+                    } else {
                         py2.setText("pzh");
                         mse.get("Tstation2").setText("攀枝花");
                     }
@@ -346,58 +326,67 @@ public class InsertActivity extends AppCompatActivity
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
 
         });
     }
 
-    private void init() throws NoSuchFieldException, IllegalAccessException {
-        Log.d("test","null:"+(findViewById(R.id.main_content).findViewById(R.id.insert_layout)==null));
-        addStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Addstaff);
-        saveStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Savestaff);
-        confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
-        query_layout = findViewById(R.id.query_layout);
-        insert_layout = findViewById(R.id.insert_layout);
-        query_layout.setVisibility(View.GONE);
-        insert_layout.setVisibility(View.VISIBLE);
-        staff[1] = new Staff();
-        for (String anEdit : edit) {
-            Field r = R.id.class.getField(anEdit);
-            mse.put(anEdit, (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
-            Log.d("test",anEdit);
+    private void init() {
+        try {
+            Log.d("test", "null:" + (findViewById(R.id.main_content).findViewById(R.id.insert_layout) == null));
+            addStaff = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.Addstaff);
+            confirm = (Button) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.confirm);
+            query_layout = findViewById(R.id.query_layout);
+            insert_layout = findViewById(R.id.insert_layout);
+            query_layout.setVisibility(View.GONE);
+            insert_layout.setVisibility(View.VISIBLE);
+            staff[1] = new Staff();
+            for (String anEdit : edit) {
+                Field r = R.id.class.getField(anEdit);
+                mse.put(anEdit, (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
+                Log.d("test", anEdit);
+            }
+            for (String aList : list) {
+                Field r = R.id.class.getField(aList);
+                mss.put(aList, (Spinner) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
+                Log.d("test", aList);
+            }
+            py1 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py1);
+            py2 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py2);
+            StaffString.add("1");
+            StaffAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, StaffString);
+            StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+            mss.get("staffnum").setAdapter(StaffAdapter);
+            Log.d("test", "init+Fstation" + (mss.get("Fstation") == null));
+            for (int i = 9; i <= 13; i++) {
+                mse.get(edit[i]).setText("0");
+            }
+            getFile();
+            Log.d("filereader", OrderList.toString());
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            e.printStackTrace();
         }
-        for (String aList : list) {
-            Field r = R.id.class.getField(aList);
-            mss.put(aList, (Spinner) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(r.getInt(null)));
-            Log.d("test",aList);
-        }
-        py1 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py1);
-        py2 = (EditText) findViewById(R.id.main_content).findViewById(R.id.insert_layout).findViewById(R.id.py2);
-        StaffString.add("1");
-        StaffAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, StaffString);
-        StaffAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        mss.get("staffnum").setAdapter(StaffAdapter);
-        Log.d("test","init+Fstation"+(mss.get("Fstation")==null));
-        for(int i=9;i<=13;i++) {
-            mse.get(edit[i]).setText("0");
-        }
-        getFile();
-        Log.d("filereader",OrderList.toString());
     }
 
-    private void save() throws NullValueException {
-        int index = Integer.parseInt(mss.get("staffnum").getSelectedItem().toString());
+    private int parseIntOrZero(String i) {
+        try {
+            return Integer.parseInt(i);
+        } catch (NumberFormatException e) {
+            Log.d("NumerFormatException", i);
+            return 0;
+        }
+    }
+
+    private void save() {
         try {
             Staff temstaff = new Staff(mss.get("category1").getSelectedItem().toString(), mss.get("category2").getSelectedItem().toString(),
-                    Integer.parseInt(mse.get("number").getText().toString()), Integer.parseInt(mse.get("uniprice").getText().toString()));
-            staff[index] = temstaff;
+                    parseIntOrZero(mse.get("number").getText().toString()), parseIntOrZero(mse.get("uniprice").getText().toString()));
+            staff[staffSelected] = temstaff;
         } catch (Exception e) {
             Toast.makeText(InsertActivity.this, "不能有空或者非数字", Toast.LENGTH_SHORT).show();
-            throw new NullValueException();
         }
         // TODO 判断空
-        Log.e("save", staff[index].toString());
+        Log.e("save", "" + staffSelected + staff[staffSelected].toString());
     }
 
     @Override
@@ -412,24 +401,19 @@ public class InsertActivity extends AppCompatActivity
         }
     }
 
-    /*
-    TODO: 把保存的过程都inline了, 可以从日志里查看是否写成功
-     */
     @Override
     protected void onStop() {
         super.onStop();
         try {
             unregisterReceiver(mReceiver);
-            Log.d("addfile","out");
-        }catch(Exception e){
-            Log.d("stop","not register");
-        }
-        finally {
+            Log.d("addfile", "out");
+        } catch (Exception e) {
+            Log.d("stop", "not register");
+        } finally {
             try {
                 FileOutputStream fos = openFileOutput("message.txt", MODE_PRIVATE);
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-                Log.d("save",""+OrderList.size());
-
+                Log.d("save", "" + OrderList.size());
                 pt.saveOrder(OrderList, writer);
                 writer.close();
             } catch (Exception e) {
@@ -466,14 +450,14 @@ public class InsertActivity extends AppCompatActivity
     }
 
     private Order makeOrder() throws NullValueException, NotNumberException {
-        IdentityHashMap<String, String> attributes = new IdentityHashMap<String, String>();
+        IdentityHashMap<String, String> attributes = new IdentityHashMap<>();
         IdentityHashMap<String, Integer> fee = new IdentityHashMap<>();
-        for (int i = 9; i <=13; i++) {
+        for (int i = 9; i <= 13; i++) {
             if ((mse.get(edit[i]).getText().toString().equals(""))) throw new NullValueException();
             try {
                 fee.put(FEE[i - 9], Integer.parseInt(mse.get(edit[i]).getText().toString()));
             } catch (Exception e) {
-                Log.d("order","1:"+i);
+                Log.d("order", "1:" + i);
                 throw new NotNumberException();
             }
         }
@@ -485,113 +469,80 @@ public class InsertActivity extends AppCompatActivity
         attributes.put("返款方式1", mss.get("Ffankuan").getSelectedItem().toString());
         attributes.put("返款方式2", mss.get("Tfankuan").getSelectedItem().toString());
         //TODO 验证合法性
-        List<Staff> tmp = new ArrayList<Staff>();
-        for(int i=1;i<=totindex;i++) {
-            tmp.add(staff[i]);
-        }
-        order= new Order(attributes, fee, tmp, Order.getBarcode(""+py1.getText()+py2.getText(),new Date(),Integer.parseInt(ID)));
-        Log.d("order",order.toJson());
-        mse.get("totnumber").setText(""+order.getTotalNumber());
-        mse.get("totpay").setText(""+order.getTotalFee());
-        mse.get("tottranpay").setText(""+order.getFee("总运费"));
-        neworder.add(order);
+        List<Staff> tmp = new ArrayList<>();
+        tmp.addAll(Arrays.asList(staff).subList(1, totindex + 1));
+        order = new Order(attributes, fee, tmp, Order.getBarcode("" + py1.getText() + py2.getText(), new Date(), Integer.parseInt(ID)));
+        Log.d("order", order.toJson());
+        mse.get("totnumber").setText("" + order.getTotalNumber());
+        mse.get("totpay").setText("" + order.getTotalFee());
+        mse.get("tottranpay").setText("" + order.getFee("总运费"));
         OrderList.add(order);
-        Log.e("Orderlist",""+OrderList.size());
+        Log.e("Orderlist", "" + OrderList.size());
         return order;
     }
-    private void exportFile() throws Exception{
-            FileWriter fileWriter = null;
-            try {
-                String SDPATH =  Environment.getExternalStorageDirectory().toString();
-                String fileName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ "日报表.txt";
-                Log.d("export",SDPATH+File.separator+ fileName);
-                File file = new File(SDPATH + File.separator + fileName);
-                if (!file.exists()) {
-                    file.createNewFile();
-                }
-                fileWriter = new FileWriter(SDPATH+File.separator+fileName);
-                Log.d("export","aaa");
-                pt.expHeader(fileWriter);
-              //  pt.exp(OrderList,fileWriter);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void exportFile() throws Exception {
+        FileWriter fileWriter = null;
+        try {
+            String SDPATH = Environment.getExternalStorageDirectory().toString();
+            String fileName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) + "日报表.txt";
+            Log.d("export", SDPATH + File.separator + fileName);
+            File file = new File(SDPATH + File.separator + fileName);
+            if (!file.exists()) {
+                file.createNewFile();
             }
-            pt.exp(OrderList, fileWriter);
-            try {
-                assert fileWriter != null;
-                fileWriter.close();
-            } catch (IOException ex) {
-                Log.e("export", "export Error2");
-            }
+            fileWriter = new FileWriter(SDPATH + File.separator + fileName);
+            Log.d("export", "aaa");
+            pt.expHeader(fileWriter);
+            //  pt.exp(OrderList,fileWriter);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        pt.exp(OrderList, fileWriter);
+        try {
+            assert fileWriter != null;
+            fileWriter.close();
+        } catch (IOException ex) {
+            Log.e("export", "export Error2");
+        }
     }
-    private void getFile(){
+
+    private void getFile() {
         FileInputStream fis = null;
         try {
-            File file = new File(getFilesDir()+"/message.txt");
-            Log.d("reader",getFilesDir()+"/message.txt");
-            if(!file.exists()) {
-                FileOutputStream out = null;
-                BufferedWriter writer = null;
-                Log.d("reader","not");
-                out = openFileOutput("message.txt",Context.MODE_PRIVATE);
-                writer = new BufferedWriter(new OutputStreamWriter(out));
+            File file = new File(getFilesDir() + "/message.txt");
+            Log.d("reader", getFilesDir() + "/message.txt");
+            if (!file.exists()) {
+                Log.d("reader", "not");
+                FileOutputStream out = openFileOutput("message.txt", Context.MODE_PRIVATE);
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
                 writer.write("");
                 writer.close();
             }
             fis = openFileInput("message.txt");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
         //Log.d("reader","asda"+reader.readLine());
         OrderList.addAll(pt.fetchOrder(reader));
-        Log.d("reader",list.toString());
+        Log.d("reader", Arrays.toString(list));
         try {
             reader.close();
         } catch (IOException e) {
-            Log.d("reader","2");
-            e.printStackTrace();
-        }
-    }
-    private void savef (List<Order> input){
-        FileOutputStream out=null;
-        BufferedWriter writer = null;
-        StringWriter sw = new StringWriter();
-        pt.saveOrder(input, sw);
-        String json = sw.toString();
-        writer = new BufferedWriter(new OutputStreamWriter(out));
-        Log.d("json",json);
-        try {
-             writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            writer.close();
-        } catch (IOException e) {
+            Log.d("reader", "2");
             e.printStackTrace();
         }
     }
 
+    private class ConnectThread extends Thread {
+        final BluetoothSocket mmSocket;
 
-
-    class ConnectThread extends Thread {
-        public final BluetoothSocket mmSocket;
-        private final BluetoothDevice mmDevice;
-        private byte[] mbyte;
-
-        public ConnectThread(BluetoothDevice device, byte[] mbyte) {
-            this.mbyte = mbyte;
+        ConnectThread(BluetoothDevice device) {
             BluetoothSocket tmp = null;
-            mmDevice = device;
 
             try {
-                // 通过 Bluetooth
-                // Device 获得 BluetoothSocket 对象
                 tmp = device.createRfcommSocketToServiceRecord(UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -611,11 +562,11 @@ public class InsertActivity extends AppCompatActivity
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
                         int tmp = 1;
-                        for(int i=1;i<=totindex;i++){
-                            Log.d("printwork",staff[i].toString());
+                        for (int i = 1; i <= totindex; i++) {
+                            Log.d("printwork", staff[i].toString());
                             int id = staff[i].getNumber();
-                            for(int j=1;j<=id;j++)
-                                PrintWork.builder().printStaff(order,staff[i],tmp++).build(outputStream).run();
+                            for (int j = 1; j <= id; j++)
+                                PrintWork.builder().printStaff(order, staff[i], tmp++).build(outputStream).run();
                         }
                         outputStream.close();
                     } catch (Exception e) {
@@ -637,9 +588,7 @@ public class InsertActivity extends AppCompatActivity
 }
 
 class NullValueException extends Exception {
-
 }
 
 class NotNumberException extends Exception {
-
 }
