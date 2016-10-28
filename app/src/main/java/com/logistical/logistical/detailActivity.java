@@ -136,10 +136,10 @@ public class detailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
-                    Toast.makeText(detailActivity.this, "Device not support Bluetooth", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "Device not support Bluetooth", Toast.LENGTH_SHORT).show();
                 }
                 if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();
@@ -175,7 +175,7 @@ public class detailActivity extends AppCompatActivity {
                 ConnectThreadOrder cnt = new ConnectThreadOrder(useDevice, null);
                 if (useDevice!=null)cnt.start();
                 else {
-                    Toast.makeText(detailActivity.this,"请先完成配对",Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this,"请先完成配对",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -184,10 +184,10 @@ public class detailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                 if (mBluetoothAdapter == null) {
-                    Toast.makeText(detailActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
                 }
                 if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                    Toast.makeText(detailActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(intent, REQUEST_ENABLE_BT);
                     mBluetoothAdapter.startDiscovery();

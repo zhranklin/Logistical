@@ -105,7 +105,7 @@ public class InsertActivity extends AppCompatActivity
                         Log.d("list",od.toJson());
                     }
                     if (OrderList.size()==0){
-                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this,"当前无任何记录",Toast.LENGTH_SHORT).show();
                         query_layout.setVisibility(View.GONE);
                         insert_layout.setVisibility(View.VISIBLE);
                     }
@@ -149,16 +149,20 @@ public class InsertActivity extends AppCompatActivity
                     }
 
                 } else if (id == R.id.export) {
-                    exportFile();
+                    try {
+                        exportFile();
+                    } catch (Exception e) {
+                        Toast.makeText(InsertActivity.this,"保存错误,请检查权限问题",Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else if (id == R.id.print) {
                     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
                     if (mBluetoothAdapter == null) {
-                        Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
 
                     }
                     if (mBluetoothAdapter != null && !mBluetoothAdapter.isEnabled()) {
-                        Toast.makeText(InsertActivity.this, "未打开蓝牙", Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this, "未打开蓝牙", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                         startActivityForResult(intent, REQUEST_ENABLE_BT);
                         mBluetoothAdapter.startDiscovery();
@@ -197,7 +201,7 @@ public class InsertActivity extends AppCompatActivity
                         cnt.start();
                     }
                     else {
-                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_LONG).show();
+                        Toast.makeText(InsertActivity.this,"请先完成配对",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -248,7 +252,7 @@ public class InsertActivity extends AppCompatActivity
                 try {
                     save();
                 } catch (NullValueException e1) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 StaffString.add("" + (++totindex));
@@ -259,7 +263,7 @@ public class InsertActivity extends AppCompatActivity
                 mss.get("category2").setSelection(0);
                 mse.get("uniprice").setText("");
                 mse.get("number").setText("");
-                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_LONG).show();
+                Toast.makeText(InsertActivity.this,"保存并增加成功",Toast.LENGTH_SHORT).show();
             }
         });
         saveStaff.setOnClickListener(new View.OnClickListener() {
@@ -267,9 +271,9 @@ public class InsertActivity extends AppCompatActivity
             public void onClick(View v) {
                 try {
                     save();
-                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this,"保存成功",Toast.LENGTH_SHORT).show();
                 } catch (NullValueException e) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -282,9 +286,9 @@ public class InsertActivity extends AppCompatActivity
                   order= makeOrder();
                     Toast.makeText(InsertActivity.this,"保存成功当前单号:"+Order.getBarcode(""+py1.getText()+py2.getText(),new Date(),Integer.parseInt(ID)),Toast.LENGTH_LONG).show();
                 } catch (NullValueException e1) {
-                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "存在未完成的表单", Toast.LENGTH_SHORT).show();
                 } catch (NotNumberException e2) {
-                    Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_LONG).show();
+                    Toast.makeText(InsertActivity.this, "请正确填写数字", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -495,7 +499,7 @@ public class InsertActivity extends AppCompatActivity
         Log.e("Orderlist",""+OrderList.size());
         return order;
     }
-    private void exportFile(){
+    private void exportFile() throws Exception{
             FileWriter fileWriter = null;
             try {
                 String SDPATH =  Environment.getExternalStorageDirectory().toString();
@@ -511,7 +515,6 @@ public class InsertActivity extends AppCompatActivity
               //  pt.exp(OrderList,fileWriter);
 
             } catch (IOException e) {
-
                 e.printStackTrace();
             }
             pt.exp(OrderList, fileWriter);
