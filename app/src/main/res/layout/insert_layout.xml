@@ -107,32 +107,33 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
 
                     <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
                         <EditText
                             android:id="@+id/py1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:hint="发站拼音首字母"
                             android:singleLine="true" />
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
                     <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
                         <EditText
                             android:id="@+id/py2"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="到站拼音首字母"
-                            android:layout_weight="1"
                             android:singleLine="true" />
                     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
                 </LinearLayout>
