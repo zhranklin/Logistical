@@ -25,7 +25,7 @@ object Order {
   def getBarcode(prefix: String, time: Date, id: Int) = {
     val date = df.format(time)
     val seconds = (time.getTime / 1000 + 3600 * 8) % 86400 / 10
-    f"$prefix$date$id%03d$seconds%04d"
+    f"$prefix%S$date$id%03d$seconds%04d"
   }
 }
 
