@@ -314,9 +314,10 @@ public class detailActivity extends AppCompatActivity {
                         OutputStream outputStream = mmSocket.getOutputStream();
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
-                        for(Staff stf :staff){
-                            PrintWork.builder().printStaff(order,stf,Integer.parseInt(ID)).build(outputStream).run();
-                        }
+                        int num = Integer.parseInt(staffSpinner.getSelectedItem().toString());
+                        int tmp = 0;
+                        for (int i=1;i<num;i++) tmp+=staff.get(i).getNumber();
+                        PrintWork.builder().printStaff(order,staff.get(num),tmp+Integer.parseInt(mse.get("number_detail").getText().toString())).build(outputStream).run();
                         outputStream.close();
                     } catch (Exception e) {
                         e.printStackTrace();

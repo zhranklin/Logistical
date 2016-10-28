@@ -556,14 +556,9 @@ public class InsertActivity extends AppCompatActivity
             e.printStackTrace();
         }
         BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-        try {
-            Log.d("reader","asda"+reader.readLine());
-            list=pt.fetchOrder(reader);
-            Log.d("reader",list.toString());
-        } catch (IOException e) {
-            Log.d("reader","1");
-            e.printStackTrace();
-        }
+        //Log.d("reader","asda"+reader.readLine());
+        list=pt.fetchOrder(reader);
+        Log.d("reader",list.toString());
         try {
             reader.close();
         } catch (IOException e) {
@@ -624,9 +619,12 @@ public class InsertActivity extends AppCompatActivity
                         Log.e("mmconnect", "" + (outputStream == null));
                         assert outputStream != null;
                         PrintWork.builder().printOrder(order).build(outputStream).run();
+                        int tmp = 1;
                         for(int i=1;i<=totindex;i++){
                             Log.d("printwork",staff[i].toString());
-                            PrintWork.builder().printStaff(order,staff[i],Integer.parseInt(ID)).build(outputStream).run();
+                            int id = staff[i].getNumber();
+                            for(int j=1;j<=id;j++)
+                                PrintWork.builder().printStaff(order,staff[i],tmp++).build(outputStream).run();
                         }
                         outputStream.close();
                     } catch (Exception e) {
