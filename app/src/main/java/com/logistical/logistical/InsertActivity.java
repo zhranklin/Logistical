@@ -34,6 +34,7 @@ public class InsertActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     HashMap<String, EditText> mse = new HashMap<String, EditText>();
     HashMap<String, Spinner> mss = new HashMap<String, Spinner>();
+    //private int staffSelected = 1;
     private ArrayList<String> StaffString = new ArrayList<>();
     private ArrayAdapter<String> StaffAdapter;
     private ListViewAdapter listviewadapter;
@@ -423,6 +424,8 @@ public class InsertActivity extends AppCompatActivity
             try {
                 FileOutputStream fos = openFileOutput("message.txt", MODE_PRIVATE);
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+                Log.d("save",""+OrderList.size());
+
                 pt.saveOrder(OrderList, writer);
                 writer.close();
             } catch (Exception e) {
@@ -495,7 +498,7 @@ public class InsertActivity extends AppCompatActivity
     private void exportFile(){
             FileWriter fileWriter = null;
             try {
-                String SDPATH = Environment.getExternalStorageDirectory().getPath();
+                String SDPATH =  Environment.getExternalStorageDirectory().toString();
                 String fileName = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+ "日报表.txt";
                 Log.d("export",SDPATH+File.separator+ fileName);
                 File file = new File(SDPATH + File.separator + fileName);

@@ -173,7 +173,10 @@ public class detailActivity extends AppCompatActivity {
                     }
                 }
                 ConnectThreadOrder cnt = new ConnectThreadOrder(useDevice, null);
-                cnt.start();
+                if (useDevice!=null)cnt.start();
+                else {
+                    Toast.makeText(detailActivity.this,"请先完成配对",Toast.LENGTH_LONG).show();
+                }
             }
         });
         print_part.setOnClickListener(new View.OnClickListener(){

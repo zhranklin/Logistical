@@ -54,7 +54,7 @@ class Porting(errorHandler: ErrorHandler) {
 
   def saveOrder(from: java.util.List[Order], to: Writer): Unit =
     from.asScala.flatMap(o ⇒ Try(o.toJson) match {
-      case Success(j) ⇒ Some(j)
+      case Success(j) ⇒ Some(j + "\n")
       case Failure(_) ⇒ errorHandler.onError(s"导出订单${o.bar}时失败"); None
     }).foreach(to.append)
 
